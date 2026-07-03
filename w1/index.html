@@ -1,143 +1,174 @@
 <!DOCTYPE html>
-<html lang="zh-TW">
+<html lang="zh-Hant">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>蕭福星 | 資訊組長 - 個人介紹</title>
-    <!-- Premium Typography (Inter & Noto Sans TC) -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Noto+Sans+TC:wght@300;400;500;700&display=swap" rel="stylesheet">
-    <!-- Lucide Icons for clean visuals -->
-    <script src="https://unpkg.com/lucide@latest"></script>
-    <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>蕭福星 | 個人介紹</title>
+  <meta name="description" content="網路深似海，AI想像無限。我是蕭福星，資訊組長與 AiGC 導師。歡迎來到我的個人介紹網頁。">
+  <!-- Import Premium Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <!-- Floating Background Glowing Halos -->
-    <div class="background-glows">
-        <div class="glow-orb orb-1"></div>
-        <div class="glow-orb orb-2"></div>
-        <div class="glow-orb orb-3"></div>
-    </div>
 
-    <!-- Main Container -->
-    <main class="container">
-        <!-- 3D Float Personal Card -->
-        <div class="profile-card" id="profile-card">
-            <!-- Card Glow Border Hack (using before/after mask in CSS) -->
-            <div class="card-content">
-                <!-- Profile Image Area -->
-                <div class="avatar-container">
-                    <div class="avatar-wrapper">
-                        <img id="avatar" src="s06.png" alt="蕭福星的大頭貼">
-                        <label for="file-input" class="upload-btn" title="更換大頭貼">
-                            <i data-lucide="plus"></i>
-                        </label>
-                        <input type="file" id="file-input" accept="image/*">
-                    </div>
-                </div>
+  <!-- Background Animated Ambient Glowing Blobs -->
+  <div class="ambient-glows">
+    <div class="glow-blob blob-1"></div>
+    <div class="glow-blob blob-2"></div>
+    <div class="glow-blob blob-3"></div>
+  </div>
 
-                <!-- Info Section -->
-                <div class="info-section">
-                    <div class="badge-container">
-                        <span class="job-badge">
-                            <i data-lucide="shield-check"></i>
-                            資訊組長
-                        </span>
-                    </div>
-                    <h1 class="name">蕭福星</h1>
-                    <h2 class="sub-title">Shiao Fu-Hsing</h2>
-                </div>
-
-                <!-- Slogan Section -->
-                <div class="slogan-section">
-                    <p class="slogan">
-                        帶領學生跨越<span class="highlight">程式高牆</span>，打造專屬 <span class="highlight">AI 品牌</span>。
-                    </p>
-                </div>
-
-                <!-- Action Button -->
-                <div class="action-section">
-                    <button class="btn-primary" id="open-modal-btn">
-                        <i data-lucide="mail"></i>
-                        Email 聯絡
-                    </button>
-                </div>
-
-                <!-- Social Links -->
-                <div class="social-section">
-                    <a href="https://www.facebook.com/lges3394" target="_blank" rel="noopener noreferrer" class="social-link" title="YouTube" aria-label="YouTube">
-                        <i data-lucide="youtube"></i>
-                    </a>
-                    <a href="https://www.facebook.com/lges3394" target="_blank" rel="noopener noreferrer" class="social-link" title="Facebook" aria-label="Facebook">
-                        <i data-lucide="facebook"></i>
-                    </a>
-                    <a href="https://www.instagram.com/" target="_blank" rel="noopener noreferrer" class="social-link" title="Instagram" aria-label="Instagram">
-                        <i data-lucide="instagram"></i>
-                    </a>
-                </div>
-            </div>
+  <!-- Page Wrapper -->
+  <main class="page-container">
+    
+    <!-- 3D Tilting Card -->
+    <div class="card" id="profile-card">
+      <div class="glare"></div>
+      
+      <!-- Avatar Section -->
+      <div class="avatar-container">
+        <div class="avatar-wrapper">
+          <img id="avatar-img" src="me.JPG" alt="蕭福星的大頭貼">
         </div>
-    </main>
+        <button class="upload-btn" id="upload-trigger" aria-label="更換大頭貼">
+          <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="12" y1="5" x2="12" y2="19"></line>
+            <line x1="5" y1="12" x2="19" y2="12"></line>
+          </svg>
+        </button>
+        <input type="file" id="avatar-input" accept="image/*" style="display: none;">
+      </div>
 
-    <!-- Interactive Contact Modal -->
-    <div class="modal-overlay" id="contact-modal">
-        <div class="modal-card">
-            <button class="modal-close" id="close-modal-btn" aria-label="關閉">
-                <i data-lucide="x"></i>
-            </button>
-            <h3 class="modal-title">聯絡資訊</h3>
-            <p class="modal-desc">點擊下方按鈕即可快速複製資訊或撥打電話</p>
-            
-            <div class="contact-items">
-                <!-- Phone -->
-                <div class="contact-item">
-                    <div class="contact-icon">
-                        <i data-lucide="phone"></i>
-                    </div>
-                    <div class="contact-details">
-                        <span class="contact-label">聯絡電話</span>
-                        <span class="contact-value" id="phone-number">0911323316</span>
-                    </div>
-                    <div class="contact-actions">
-                        <a href="tel:0911323316" class="action-icon-btn" title="撥打電話" aria-label="撥打電話">
-                            <i data-lucide="phone-call"></i>
-                        </a>
-                        <button class="action-icon-btn copy-btn" data-copy-target="phone-number" title="複製電話" aria-label="複製電話">
-                            <i data-lucide="copy"></i>
-                        </button>
-                    </div>
-                </div>
-
-                <!-- Email -->
-                <div class="contact-item">
-                    <div class="contact-icon">
-                        <i data-lucide="mail"></i>
-                    </div>
-                    <div class="contact-details">
-                        <span class="contact-label">電子信箱</span>
-                        <span class="contact-value" id="email-address">lges3394@gmail.com</span>
-                    </div>
-                    <div class="contact-actions">
-                        <a href="mailto:lges3394@gmail.com" class="action-icon-btn" title="寄送郵件" aria-label="寄送郵件">
-                            <i data-lucide="send"></i>
-                        </a>
-                        <button class="action-icon-btn copy-btn" data-copy-target="email-address" title="複製信箱" aria-label="複製信箱">
-                            <i data-lucide="copy"></i>
-                        </button>
-                    </div>
-                </div>
-            </div>
+      <!-- Identity Section -->
+      <div class="identity-container">
+        <div class="name-badge-row">
+          <h1 class="name">蕭福星</h1>
+          <span class="badge">龍津國小</span>
         </div>
+        <p class="title">資訊組長</p>
+      </div>
+
+      <!-- Slogan Section -->
+      <div class="slogan-container">
+        <p class="slogan">網路<span class="highlight">深似海</span>，AI想像<span class="highlight">無限</span>。</p>
+      </div>
+
+      <!-- Action Button -->
+      <div class="action-container">
+        <a href="mailto:jun1125@gmail.com" class="email-btn" id="email-link">
+          <svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+            <polyline points="22,6 12,13 2,6"></polyline>
+          </svg>
+          聯絡資訊 (jun1125@gmail.com)
+        </a>
+      </div>
+
+      <!-- Social Connections -->
+      <div class="socials-container">
+        <a href="https://padlet.com/jun1125/padlet-noovja9llcet1c2j" target="_blank" rel="noopener noreferrer" class="social-link" title="作品分享" aria-label="作品分享">
+          <!-- Briefcase SVG -->
+          <svg viewBox="0 0 24 24" width="22" height="22" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect>
+            <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path>
+          </svg>
+        </a>
+        <a href="https://www.facebook.com/lges3394" target="_blank" rel="noopener noreferrer" class="social-link" title="Facebook" aria-label="Facebook">
+          <!-- Facebook SVG -->
+          <svg viewBox="0 0 24 24" width="22" height="22" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path>
+          </svg>
+        </a>
+        <a href="https://www.instagram.com/fuxing.xiao/" target="_blank" rel="noopener noreferrer" class="social-link" title="Instagram" aria-label="Instagram">
+          <!-- Instagram SVG -->
+          <svg viewBox="0 0 24 24" width="22" height="22" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
+            <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
+            <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
+          </svg>
+        </a>
+      </div>
+
     </div>
+  </main>
 
-    <!-- Toast Notification -->
-    <div class="toast" id="toast">已成功複製到剪貼簿</div>
+  <script>
+    // Elements
+    const card = document.getElementById('profile-card');
+    const glare = card.querySelector('.glare');
+    const avatarImg = document.getElementById('avatar-img');
+    const uploadTrigger = document.getElementById('upload-trigger');
+    const avatarInput = document.getElementById('avatar-input');
 
-    <script src="script.js"></script>
-    <script>
-        // Initialize Lucide Icons
-        lucide.createIcons();
-    </script>
+    // 1. Avatar fallback and loading
+    avatarImg.onerror = function() {
+      // If default me.JPG fails to load, try lower case me.jpg
+      if (avatarImg.src.endsWith('me.JPG')) {
+        avatarImg.src = 'me.jpg';
+      } else {
+        // Fallback to a high-quality SVG placeholder styled in Tiffany Blue
+        avatarImg.src = `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" fill="none"><circle cx="60" cy="60" r="60" fill="%230c1822"/><circle cx="60" cy="45" r="22" fill="%236fcbc2" opacity="0.85"/><path d="M22 96C22 76 39 68 60 68C81 68 98 76 98 96" fill="%236fcbc2" opacity="0.85"/></svg>`;
+      }
+    };
+
+    // Load avatar from localStorage if saved
+    const cachedAvatar = localStorage.getItem('user-avatar');
+    if (cachedAvatar) {
+      avatarImg.src = cachedAvatar;
+    }
+
+    // Trigger file select on button click
+    uploadTrigger.addEventListener('click', () => avatarInput.click());
+
+    // File change handler
+    avatarInput.addEventListener('change', (e) => {
+      const file = e.target.files[0];
+      if (file) {
+        const objectUrl = URL.createObjectURL(file);
+        avatarImg.src = objectUrl;
+
+        // Persist avatar into localStorage
+        const reader = new FileReader();
+        reader.onload = function(evt) {
+          try {
+            localStorage.setItem('user-avatar', evt.target.result);
+          } catch (err) {
+            console.warn("Could not cache avatar locally (size might exceed 5MB quota).", err);
+          }
+        };
+        reader.readAsDataURL(file);
+      }
+    });
+
+    // 2. 3D Float/Tilt Effect
+    card.addEventListener('mousemove', (e) => {
+      const rect = card.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
+
+      // Calculate normalized offsets (-0.5 to 0.5)
+      const xNorm = x / rect.width - 0.5;
+      const yNorm = y / rect.height - 0.5;
+
+      // Tilts: X tilt depends on Y displacement, Y tilt depends on X displacement
+      const maxTilt = 10; // Maximum rotation in degrees
+      const tiltX = -yNorm * maxTilt;
+      const tiltY = xNorm * maxTilt;
+
+      card.style.transform = `perspective(1000px) rotateX(${tiltX}deg) rotateY(${tiltY}deg) translateY(-4px)`;
+
+      // Dynamic reflections / glare spotlight
+      glare.style.background = `radial-gradient(circle at ${x}px ${y}px, rgba(111, 203, 194, 0.15) 0%, rgba(255, 255, 255, 0.03) 50%, rgba(255, 255, 255, 0) 80%)`;
+      glare.style.opacity = '1';
+    });
+
+    card.addEventListener('mouseleave', () => {
+      // Smooth reset
+      card.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg) translateY(0px)';
+      glare.style.opacity = '0';
+    });
+  </script>
 </body>
 </html>
