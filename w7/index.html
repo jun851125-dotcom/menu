@@ -1,0 +1,1247 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lo-Fi 音樂動畫產生器 - FUSHING</title>
+  <!-- 引入 Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
+  
+  <style>
+    /* CSS Reset */
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body, html {
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      background-color: #05030a;
+      font-family: 'Outfit', 'Inter', system-ui, -apple-system, sans-serif;
+      user-select: none;
+    }
+
+    /* Fullscreen Canvas */
+    #canvas {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      display: block;
+      z-index: 1;
+    }
+
+    /* Glassmorphism Control Panel */
+    #control-panel {
+      position: absolute;
+      bottom: 40px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 440px;
+      max-width: 90%;
+      padding: 24px;
+      background: rgba(14, 9, 30, 0.6);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 20px;
+      box-shadow: 0 12px 40px 0 rgba(0, 0, 0, 0.6), 
+                  inset 0 1px 1px rgba(255, 255, 255, 0.1);
+      z-index: 10;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 16px;
+      transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    #control-panel:hover {
+      background: rgba(18, 12, 38, 0.7);
+      border-color: rgba(255, 42, 133, 0.2);
+      box-shadow: 0 16px 48px 0 rgba(0, 0, 0, 0.7), 
+                  0 0 15px rgba(255, 42, 133, 0.1),
+                  inset 0 1px 1px rgba(255, 255, 255, 0.15);
+    }
+
+    /* Header styling */
+    .header {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .title {
+      font-size: 1.4rem;
+      font-weight: 800;
+      letter-spacing: 2px;
+      color: #ffffff;
+      text-transform: uppercase;
+      text-shadow: 0 0 8px rgba(255, 255, 255, 0.5);
+    }
+
+    .title span {
+      color: #ff2a85;
+      text-shadow: 0 0 10px rgba(255, 42, 133, 0.8),
+                   0 0 20px rgba(255, 42, 133, 0.4);
+    }
+
+    .subtitle {
+      font-size: 0.75rem;
+      color: rgba(255, 255, 255, 0.5);
+      letter-spacing: 3px;
+      text-transform: uppercase;
+    }
+
+    /* Visualizer inside control panel */
+    .visualizer-container {
+      width: 100%;
+      height: 50px;
+      position: relative;
+      background: rgba(0, 0, 0, 0.25);
+      border-radius: 10px;
+      border: 1px solid rgba(255, 255, 255, 0.03);
+      overflow: hidden;
+    }
+
+    #visualizer {
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
+
+    /* Status Display */
+    .status-display {
+      width: 100%;
+      background: rgba(0, 0, 0, 0.15);
+      padding: 10px 14px;
+      border-radius: 10px;
+      font-family: 'Courier New', Courier, monospace;
+      font-size: 0.75rem;
+      color: #c9bdf2;
+      border: 1px solid rgba(255, 255, 255, 0.02);
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .status-row {
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .status-val {
+      color: #ff9ec4;
+      font-weight: bold;
+    }
+
+    /* Buttons container */
+    .button-group {
+      display: flex;
+      gap: 12px;
+      width: 100%;
+    }
+
+    .btn {
+      flex: 1;
+      padding: 12px 20px;
+      border: none;
+      border-radius: 12px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      letter-spacing: 1px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+      outline: none;
+    }
+
+    /* Play Button */
+    .btn-play {
+      background: linear-gradient(135deg, #ff2a85 0%, #a11bff 100%);
+      color: white;
+      box-shadow: 0 4px 15px rgba(255, 42, 133, 0.3);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .btn-play:hover {
+      box-shadow: 0 6px 20px rgba(255, 42, 133, 0.5), 
+                  0 0 10px rgba(161, 27, 255, 0.3);
+      transform: translateY(-2px);
+    }
+
+    .btn-play:active {
+      transform: translateY(1px);
+      box-shadow: 0 2px 10px rgba(255, 42, 133, 0.3);
+    }
+
+    /* Stop Button */
+    .btn-stop {
+      background: rgba(255, 255, 255, 0.06);
+      color: rgba(255, 255, 255, 0.7);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .btn-stop:hover {
+      background: rgba(255, 75, 75, 0.12);
+      border-color: rgba(255, 75, 75, 0.4);
+      color: #ff7676;
+      box-shadow: 0 4px 15px rgba(255, 75, 75, 0.15);
+      transform: translateY(-2px);
+    }
+
+    .btn-stop:active {
+      transform: translateY(1px);
+      box-shadow: 0 2px 10px rgba(255, 75, 75, 0.1);
+    }
+
+    /* Pulse/glow animation for play state */
+    .playing .btn-play {
+      animation: pulseGlow 2s infinite alternate;
+    }
+
+    @keyframes pulseGlow {
+      0% {
+        box-shadow: 0 4px 12px rgba(255, 42, 133, 0.3), 0 0 0px rgba(161, 27, 255, 0.1);
+      }
+      100% {
+        box-shadow: 0 6px 22px rgba(255, 42, 133, 0.6), 0 0 15px rgba(161, 27, 255, 0.4);
+      }
+    }
+
+    /* Ambient background indicator */
+    .playing #control-panel {
+      border-color: rgba(255, 42, 133, 0.25);
+    }
+  </style>
+
+  <!-- 引入 Tone.js v14 -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.8.49/Tone.js"></script>
+</head>
+<body>
+
+  <canvas id="canvas"></canvas>
+
+  <div id="control-panel">
+    <div class="header">
+      <div class="title">Fushing <span>Lo-Fi</span></div>
+      <div class="subtitle">Chill Beats Radio</div>
+    </div>
+    
+    <div class="visualizer-container">
+      <canvas id="visualizer"></canvas>
+    </div>
+
+    <div class="status-display">
+      <div class="status-row">
+        <span>BPM / Style:</span>
+        <span class="status-val" id="bpm-val">80 | Hip Hop</span>
+      </div>
+      <div class="status-row">
+        <span>Key:</span>
+        <span class="status-val" id="key-val">-</span>
+      </div>
+      <div class="status-row">
+        <span>Chords:</span>
+        <span class="status-val" id="chords-val">Standby</span>
+      </div>
+      <div class="status-row">
+        <span>Status:</span>
+        <span class="status-val" id="status-val">Stopped</span>
+      </div>
+    </div>
+
+    <div class="button-group">
+      <button class="btn btn-play" id="btn-play">
+        <span>✨ 產生 30 秒循環</span>
+      </button>
+      <button class="btn btn-stop" id="btn-stop">
+        <span>⏹ 停止</span>
+      </button>
+    </div>
+  </div>
+
+  <script>
+    // ==========================================
+    // 1. CANVAS 視覺特效引擎
+    // ==========================================
+    const canvas = document.getElementById("canvas");
+    const ctx = canvas.getContext("2d");
+
+    let width, height;
+    let dpr = window.devicePixelRatio || 1;
+
+    function resize() {
+      width = window.innerWidth;
+      height = window.innerHeight;
+      canvas.width = width * dpr;
+      canvas.height = height * dpr;
+      ctx.scale(dpr, dpr);
+      
+      // 重新生成城市天際線
+      generateSkyline();
+      
+      // 初始化與重新生成粒子
+      initParticles();
+    }
+
+    // 基礎粒子類別
+    class Star {
+      constructor() {
+        this.reset();
+        this.phase = Math.random() * Math.PI * 2;
+      }
+      reset() {
+        this.x = Math.random() * width;
+        this.y = Math.random() * height * 0.6; // 只在天空上半部
+        this.size = 0.4 + Math.random() * 1.0;
+        this.maxAlpha = 0.2 + Math.random() * 0.6;
+        this.speed = 0.005 + Math.random() * 0.015;
+      }
+      update() {
+        this.phase += this.speed;
+      }
+      draw(c) {
+        const alpha = (Math.sin(this.phase) + 1) / 2 * this.maxAlpha;
+        c.fillStyle = `rgba(255, 255, 245, ${alpha})`;
+        c.beginPath();
+        c.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+        c.fill();
+      }
+    }
+
+    class Raindrop {
+      constructor() {
+        this.x = Math.random() * (width + 200);
+        this.y = Math.random() * height - height;
+        this.len = 10 + Math.random() * 15;
+        this.speedY = 6 + Math.random() * 6;
+        this.speedX = -1.5 - Math.random() * 1.5; // 風向左吹
+        this.opacity = 0.08 + Math.random() * 0.12;
+      }
+      update() {
+        this.y += this.speedY;
+        this.x += this.speedX;
+        if (this.y > height || this.x < -20) {
+          this.y = -this.len;
+          this.x = Math.random() * (width + 200);
+        }
+      }
+      draw(c) {
+        c.strokeStyle = `rgba(180, 205, 255, ${this.opacity})`;
+        c.lineWidth = 1.0;
+        c.beginPath();
+        c.moveTo(this.x, this.y);
+        c.lineTo(this.x + this.speedX * 0.8, this.y + this.len);
+        c.stroke();
+      }
+    }
+
+    class Leaf {
+      constructor() {
+        this.reset(true);
+      }
+      reset(init = false) {
+        this.x = Math.random() * (width + 100);
+        this.y = init ? Math.random() * height : -20;
+        this.size = 6 + Math.random() * 7;
+        this.speedY = 0.8 + Math.random() * 1.2;
+        this.speedX = -0.5 - Math.random() * 1.0;
+        this.angle = Math.random() * Math.PI * 2;
+        this.spinSpeed = 0.01 + Math.random() * 0.03;
+        this.swingRange = 0.6 + Math.random() * 1.2;
+        this.swingSpeed = 0.01 + Math.random() * 0.02;
+        this.swingPhase = Math.random() * Math.PI * 2;
+        
+        // 秋天紅/橙色調
+        const colors = [
+          "rgba(196, 92, 45, 0.45)",  // 暖橙
+          "rgba(164, 45, 45, 0.45)",  // 深紅
+          "rgba(210, 135, 46, 0.45)", // 金黃
+          "rgba(128, 62, 34, 0.45)"   // 褐色
+        ];
+        this.color = colors[Math.floor(Math.random() * colors.length)];
+      }
+      update() {
+        this.y += this.speedY;
+        this.swingPhase += this.swingSpeed;
+        this.x += this.speedX + Math.sin(this.swingPhase) * this.swingRange;
+        this.angle += this.spinSpeed;
+        
+        if (this.y > height + 20 || this.x < -20) {
+          this.reset(false);
+        }
+      }
+      draw(c) {
+        c.save();
+        c.translate(this.x, this.y);
+        c.rotate(this.angle);
+        c.fillStyle = this.color;
+        c.beginPath();
+        // 繪製扁平橢圓代表落葉
+        c.ellipse(0, 0, this.size, this.size * 0.4, 0, 0, Math.PI * 2);
+        c.fill();
+        c.restore();
+      }
+    }
+
+    class Dust {
+      constructor() {
+        this.x = Math.random() * width;
+        this.y = Math.random() * height;
+        this.r = 1.0 + Math.random() * 1.8;
+        this.speedY = -0.15 - Math.random() * 0.35; // 緩慢上升
+        this.speedX = -0.15 + Math.random() * 0.3;
+        this.maxAlpha = 0.15 + Math.random() * 0.3;
+        this.phase = Math.random() * Math.PI * 2;
+        this.pulseSpeed = 0.01 + Math.random() * 0.02;
+      }
+      update() {
+        this.y += this.speedY;
+        this.x += this.speedX;
+        this.phase += this.pulseSpeed;
+        
+        if (this.y < -10 || this.x < -10 || this.x > width + 10) {
+          this.y = height + 10;
+          this.x = Math.random() * width;
+        }
+      }
+      draw(c) {
+        const alpha = (Math.sin(this.phase) + 1) / 2 * this.maxAlpha;
+        c.save();
+        c.fillStyle = `rgba(255, 230, 160, ${alpha})`;
+        c.shadowColor = "rgba(255, 220, 150, 0.4)";
+        c.shadowBlur = 4;
+        c.beginPath();
+        c.arc(this.x, this.y, this.r, 0, Math.PI * 2);
+        c.fill();
+        c.restore();
+      }
+    }
+
+    // 圓角矩形輔助函數
+    function drawRoundRect(c, x, y, w, h, radius) {
+      c.beginPath();
+      c.moveTo(x + radius, y);
+      c.lineTo(x + w - radius, y);
+      c.quadraticCurveTo(x + w, y, x + w, y + radius);
+      c.lineTo(x + w, y + h - radius);
+      c.quadraticCurveTo(x + w, y + h, x + w - radius, y + h);
+      c.lineTo(x + radius, y + h);
+      c.quadraticCurveTo(x, y + h, x, y + h - radius);
+      c.lineTo(x, y + radius);
+      c.quadraticCurveTo(x, y, x + radius, y);
+      c.closePath();
+    }
+
+    // 粒子系統初始化
+    let stars = [];
+    let raindrops = [];
+    let leaves = [];
+    let dusts = [];
+
+    function initParticles() {
+      stars = Array.from({ length: 120 }, () => new Star());
+      raindrops = Array.from({ length: 150 }, () => new Raindrop());
+      leaves = Array.from({ length: 20 }, () => new Leaf());
+      dusts = Array.from({ length: 45 }, () => new Dust());
+    }
+
+    // 城市天際線數據結構
+    let skylineLayer1 = []; // 背景
+    let skylineLayer2 = []; // 中景
+    let skylineLayer3 = []; // 前景
+
+    function generateSkyline() {
+      if (!width || !height) return;
+      skylineLayer1 = [];
+      skylineLayer2 = [];
+      skylineLayer3 = [];
+      
+      const midX = width / 2;
+      
+      // 背景層 (1)：矮密
+      let x = -20;
+      while (x < width + 50) {
+        const w = 50 + Math.random() * 60;
+        const h = height * 0.18 + Math.random() * height * 0.15;
+        skylineLayer1.push({ x, w, h });
+        x += w - 8;
+      }
+
+      // 中景層 (2)：中等
+      x = -20;
+      while (x < width + 50) {
+        const w = 70 + Math.random() * 80;
+        const h = height * 0.25 + Math.random() * height * 0.18;
+        
+        // 窗戶
+        const windows = [];
+        const cols = Math.floor(w / 14) - 1;
+        const rows = Math.floor(h / 18) - 1;
+        if (cols > 0 && rows > 0) {
+          for (let c = 0; c < cols; c++) {
+            for (let r = 0; r < rows; r++) {
+              if (Math.random() < 0.20) { // 20% 發光機率
+                const palette = ["rgba(255, 215, 120,", "rgba(180, 235, 255,", "rgba(255, 160, 100,"];
+                windows.push({
+                  col: c,
+                  row: r,
+                  colorBase: palette[Math.floor(Math.random() * palette.length)],
+                  baseOpacity: 0.25 + Math.random() * 0.35,
+                  speed: 0.005 + Math.random() * 0.015,
+                  phase: Math.random() * Math.PI * 2
+                });
+              }
+            }
+          }
+        }
+        
+        skylineLayer2.push({ x, w, h, windows });
+        x += w - 12;
+      }
+
+      // 前景層 (3)：最高
+      x = -20;
+      while (x < width + 50) {
+        const w = 90 + Math.random() * 100;
+        let h = height * 0.35 + Math.random() * height * 0.22;
+        
+        // 接近畫面正中央的建築物強制設為最高，以便懸掛霓虹招牌
+        const distToCenter = Math.abs((x + w/2) - midX);
+        if (distToCenter < 100) {
+          h = height * 0.52 + Math.random() * height * 0.05;
+        }
+
+        // 窗戶
+        const windows = [];
+        const cols = Math.floor(w / 16) - 1;
+        const rows = Math.floor(h / 22) - 1;
+        if (cols > 0 && rows > 0) {
+          for (let c = 0; c < cols; c++) {
+            for (let r = 0; r < rows; r++) {
+              if (Math.random() < 0.28) { // 28% 發光機率
+                const palette = ["rgba(255, 220, 110,", "rgba(160, 240, 255,", "rgba(255, 140, 90,"];
+                windows.push({
+                  col: c,
+                  row: r,
+                  colorBase: palette[Math.floor(Math.random() * palette.length)],
+                  baseOpacity: 0.35 + Math.random() * 0.4,
+                  speed: 0.008 + Math.random() * 0.02,
+                  phase: Math.random() * Math.PI * 2
+                });
+              }
+            }
+          }
+        }
+
+        skylineLayer3.push({ x, w, h, windows, hasSign: false });
+        x += w - 18;
+      }
+
+      // 找出前景層中最靠近中央的建築物，並在上面架設 neon 霓虹招牌
+      let targetIndex = 0;
+      let minDistance = Infinity;
+      for (let i = 0; i < skylineLayer3.length; i++) {
+        const b = skylineLayer3[i];
+        const center = b.x + b.w / 2;
+        const dist = Math.abs(center - midX);
+        if (dist < minDistance) {
+          minDistance = dist;
+          targetIndex = i;
+        }
+      }
+      
+      if (skylineLayer3[targetIndex]) {
+        skylineLayer3[targetIndex].hasSign = true;
+      }
+    }
+
+    // 渲染天際線建築物 window 的燈光呼吸
+    function drawBuildingWindows(b, yBase, wWin, hWin, gapX, gapY) {
+      if (!b.windows) return;
+      for (let i = 0; i < b.windows.length; i++) {
+        const win = b.windows[i];
+        win.phase += win.speed;
+        
+        // 利用 sine wave 計算呼吸燈光的不透明度
+        const alpha = win.baseOpacity + Math.sin(win.phase) * 0.15;
+        const xWin = b.x + gapX + win.col * (wWin + gapX);
+        const yWin = yBase + gapY + win.row * (hWin + gapY);
+        
+        ctx.fillStyle = win.colorBase + Math.max(0.05, Math.min(0.95, alpha)) + ")";
+        ctx.fillRect(xWin, yWin, wWin, hWin);
+      }
+    }
+
+    // 渲染霓虹燈招牌 FUSHING
+    let neonFlickerState = 1.0;
+    function drawNeonSign(b) {
+      const signX = b.x + b.w / 2;
+      const signY = height - b.h - 45; // 招牌中心 y 軸
+      
+      // 繪製招牌鐵架支撐
+      ctx.strokeStyle = "#000000";
+      ctx.lineWidth = 3;
+      ctx.beginPath();
+      ctx.moveTo(signX - 28, signY + 16);
+      ctx.lineTo(signX - 28, height - b.h);
+      ctx.moveTo(signX + 28, signY + 16);
+      ctx.lineTo(signX + 28, height - b.h);
+      ctx.stroke();
+
+      // 霓虹隨機微小閃爍效果
+      if (Math.random() < 0.008) {
+        neonFlickerState = Math.random() < 0.35 ? (Math.random() * 0.4) : 1.0;
+      } else if (neonFlickerState < 1.0) {
+        // 逐漸恢復亮度
+        neonFlickerState += 0.08;
+        if (neonFlickerState > 1.0) neonFlickerState = 1.0;
+      }
+
+      ctx.save();
+      // 粉紅色霓虹強烈發光陰影 (shadowBlur)
+      ctx.shadowColor = `rgba(255, 42, 133, ${0.85 * neonFlickerState})`;
+      ctx.shadowBlur = 18;
+      
+      // 霓虹邊框
+      ctx.strokeStyle = `rgba(255, 42, 133, ${0.9 * neonFlickerState})`;
+      ctx.lineWidth = 3;
+      drawRoundRect(ctx, signX - 58, signY - 18, 116, 36, 6);
+      ctx.stroke();
+      
+      // 霓虹邊框的亮白細線內芯
+      ctx.shadowBlur = 4;
+      ctx.strokeStyle = `rgba(255, 210, 230, ${0.95 * neonFlickerState})`;
+      ctx.lineWidth = 1;
+      drawRoundRect(ctx, signX - 58, signY - 18, 116, 36, 6);
+      ctx.stroke();
+
+      // FUSHING 霓虹文字
+      ctx.shadowColor = `rgba(255, 42, 133, ${0.85 * neonFlickerState})`;
+      ctx.shadowBlur = 14;
+      ctx.fillStyle = `rgba(255, 215, 235, ${neonFlickerState})`;
+      ctx.font = 'bold 18px "Courier New", Courier, monospace';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      
+      // 筆畫邊線
+      ctx.strokeStyle = `rgba(255, 42, 133, ${0.8 * neonFlickerState})`;
+      ctx.lineWidth = 2;
+      ctx.strokeText("FUSHING", signX, signY);
+      // 實心文字
+      ctx.fillText("FUSHING", signX, signY);
+      ctx.restore();
+    }
+
+    // 主要繪圖循環
+    let isVisualsRunning = true;
+    function animate() {
+      if (!isVisualsRunning) return;
+      requestAnimationFrame(animate);
+
+      // 1. 深藍/深紫色的漸層夜空背景
+      const skyGrad = ctx.createLinearGradient(0, 0, 0, height);
+      skyGrad.addColorStop(0, "#080516");   // 深黑藍
+      skyGrad.addColorStop(0.4, "#120a28"); // 深靛紫
+      skyGrad.addColorStop(0.7, "#24103f"); // 暖紫
+      skyGrad.addColorStop(1, "#361652");   // 天際線暗紅紫
+      ctx.fillStyle = skyGrad;
+      ctx.fillRect(0, 0, width, height);
+
+      // 2. 渲染發光月亮與閃爍星星
+      // 繪製星星
+      stars.forEach(s => {
+        s.update();
+        s.draw(ctx);
+      });
+
+      // 繪製發光月亮 (crescent moon)
+      const moonX = width * 0.76;
+      const moonY = height * 0.22;
+      const moonRadius = 38;
+
+      // 月亮外層放射漸層光暈
+      const moonGlow = ctx.createRadialGradient(moonX, moonY, moonRadius * 0.2, moonX, moonY, moonRadius * 2.8);
+      moonGlow.addColorStop(0, "rgba(255, 235, 190, 0.25)");
+      moonGlow.addColorStop(0.3, "rgba(255, 205, 160, 0.08)");
+      moonGlow.addColorStop(1, "rgba(255, 205, 160, 0)");
+      ctx.fillStyle = moonGlow;
+      ctx.beginPath();
+      ctx.arc(moonX, moonY, moonRadius * 2.8, 0, Math.PI * 2);
+      ctx.fill();
+
+      // 月亮主體
+      ctx.save();
+      ctx.fillStyle = "#ffeac4";
+      ctx.shadowColor = "rgba(255, 220, 160, 0.6)";
+      ctx.shadowBlur = 12;
+      ctx.beginPath();
+      ctx.arc(moonX, moonY, moonRadius, -Math.PI / 2, Math.PI / 2, false);
+      ctx.quadraticCurveTo(moonX + moonRadius * 0.22, moonY, moonX, moonY - moonRadius);
+      ctx.closePath();
+      ctx.fill();
+      ctx.restore();
+
+      // 3. 城市天際線渲染 (分三層，實踐視差深度)
+      // 背景層
+      ctx.fillStyle = "#05020c";
+      skylineLayer1.forEach(b => {
+        ctx.fillRect(b.x, height - b.h, b.w, b.h);
+      });
+
+      // 中景層
+      ctx.fillStyle = "#090414";
+      skylineLayer2.forEach(b => {
+        const yBase = height - b.h;
+        ctx.fillRect(b.x, yBase, b.w, b.h);
+        
+        // 繪製中景窗戶
+        const wWin = 3;
+        const hWin = 5;
+        const gapX = (b.w - (Math.floor(b.w / 14) - 1) * wWin) / (Math.floor(b.w / 14));
+        const gapY = (b.h - (Math.floor(b.h / 18) - 1) * hWin) / (Math.floor(b.h / 18));
+        drawBuildingWindows(b, yBase, wWin, hWin, gapX, gapY);
+      });
+
+      // 前景層
+      ctx.fillStyle = "#020106";
+      skylineLayer3.forEach(b => {
+        const yBase = height - b.h;
+        ctx.fillRect(b.x, yBase, b.w, b.h);
+        
+        // 繪製前景窗戶
+        const wWin = 5;
+        const hWin = 8;
+        const gapX = (b.w - (Math.floor(b.w / 16) - 1) * wWin) / (Math.floor(b.w / 16));
+        const gapY = (b.h - (Math.floor(b.h / 22) - 1) * hWin) / (Math.floor(b.h / 22));
+        drawBuildingWindows(b, yBase, wWin, hWin, gapX, gapY);
+        
+        // 繪製專屬霓虹招牌
+        if (b.hasSign) {
+          drawNeonSign(b);
+        }
+      });
+
+      // 4. 粒子系統更新與繪製
+      // 下雨特效
+      raindrops.forEach(r => {
+        r.update();
+        r.draw(ctx);
+      });
+
+      // 微小發光塵埃粒子 (飄在天空中)
+      dusts.forEach(d => {
+        d.update();
+        d.draw(ctx);
+      });
+
+      // 隨機飄落的秋葉
+      leaves.forEach(l => {
+        l.update();
+        l.draw(ctx);
+      });
+    }
+
+    // 初始化與縮放監聽
+    window.addEventListener("resize", resize);
+    resize();
+    requestAnimationFrame(animate);
+
+
+    // ==========================================
+    // 2. TONE.JS 音樂生成與排程引擎
+    // ==========================================
+    let isPlaying = false;
+    let audioContextStarted = false;
+    
+    // 定義效果器與合成器
+    let reverb, delay, chorus, chordsSynth, bassSynth, leadSynth;
+    let kickSynth, snareSynth, hatSynth;
+    let vinylFilter, vinylHiss, crackleSynth;
+    let analyser;
+
+    // 音樂常數
+    const BPM = 80;
+    Tone.Transport.bpm.value = BPM;
+
+    // 音碼資料庫：定義 D Minor, A Minor, G Minor 經典爵士七和弦/九和弦
+    const chordDatabase = {
+      "Dm": {
+        "i9": { name: "Dm9", bass: "D2", notes: ["F3", "A3", "C4", "E4"] },
+        "iv9": { name: "Gm9", bass: "G2", notes: ["Bb3", "D3", "F3", "A4"] },
+        "VII9": { name: "C9", bass: "C3", notes: ["E3", "G3", "Bb3", "D4"] },
+        "IIImaj9": { name: "Fmaj9", bass: "F2", notes: ["A3", "C3", "E3", "G4"] },
+        "VImaj7": { name: "Bbmaj7", bass: "Bb2", notes: ["D3", "F3", "A3", "D4"] },
+        "ii7b5": { name: "Em7b5", bass: "E2", notes: ["G3", "Bb3", "D4", "G4"] },
+        "V7b9": { name: "A7b9", bass: "A2", notes: ["C#3", "G3", "Bb3", "E4"] }
+      },
+      "Am": {
+        "i9": { name: "Am9", bass: "A2", notes: ["C3", "E3", "G3", "B3"] },
+        "iv9": { name: "Dm9", bass: "D2", notes: ["F3", "A3", "C4", "E4"] },
+        "VII9": { name: "G9", bass: "G2", notes: ["B3", "D3", "F3", "A4"] },
+        "IIImaj9": { name: "Cmaj9", bass: "C3", notes: ["E3", "G3", "B3", "D4"] },
+        "VImaj7": { name: "Fmaj7", bass: "F2", notes: ["A3", "C3", "E3", "A4"] },
+        "ii7b5": { name: "Bm7b5", bass: "B2", notes: ["D3", "F3", "A3", "D4"] },
+        "V7b9": { name: "E7b9", bass: "E2", notes: ["G#3", "D3", "F3", "B4"] }
+      },
+      "Gm": {
+        "i9": { name: "Gm9", bass: "G2", notes: ["Bb3", "D3", "F3", "A4"] },
+        "iv9": { name: "Cm9", bass: "C3", notes: ["Eb3", "G3", "Bb3", "D4"] },
+        "VII9": { name: "F9", bass: "F2", notes: ["A3", "C3", "Eb3", "G4"] },
+        "IIImaj9": { name: "Bbmaj9", bass: "Bb2", notes: ["D3", "F3", "A3", "C4"] },
+        "VImaj7": { name: "Ebmaj7", bass: "Eb2", notes: ["G3", "Bb3", "D4", "G4"] },
+        "ii7b5": { name: "Am7b5", bass: "A2", notes: ["C3", "Eb3", "G3", "C4"] },
+        "V7b9": { name: "D7b9", bass: "D2", notes: ["F#3", "C3", "Eb3", "A4"] }
+      }
+    };
+
+    // 旋律音階定義 (配合同弦音高生成旋律)
+    const melodyScales = {
+      "Dm": ["D4", "E4", "F4", "G4", "A4", "C5", "D5", "E5", "F5", "A5"],
+      "Am": ["A4", "B4", "C5", "D5", "E5", "G5", "A5", "B5", "C6", "E6"],
+      "Gm": ["G4", "A4", "Bb4", "C5", "D5", "F5", "G5", "A5", "Bb5", "D6"]
+    };
+
+    function initAudio() {
+      if (audioContextStarted) return;
+      
+      // 1. 效果器鏈 (Reverb, Delay, Chorus 營造慵懶溫暖的 Lo-Fi 聲場)
+      reverb = new Tone.Reverb({
+        roomSize: 0.75,
+        wet: 0.35
+      }).toDestination();
+
+      delay = new Tone.FeedbackDelay({
+        delayTime: "8n.", // 附點八分音符延遲
+        feedback: 0.3,
+        wet: 0.22
+      }).connect(reverb);
+
+      // Chorus 用於模擬模擬磁帶的輕微音高飄忽 (Wow and Flutter)
+      chorus = new Tone.Chorus({
+        frequency: 1.5,
+        delayTime: 4,
+        depth: 0.35,
+        wet: 0.4
+      }).connect(delay);
+
+      // 2. 樂器初始化
+      // PolySynth 和弦進程 (E-Piano 溫暖三角波)
+      chordsSynth = new Tone.PolySynth(Tone.Synth, {
+        oscillator: { type: "triangle" },
+        envelope: {
+          attack: 1.0,  // 緩慢淡入
+          decay: 2.0,
+          sustain: 0.85,
+          release: 2.5  // 悠長尾音
+        }
+      }).connect(chorus);
+      chordsSynth.volume.value = -14;
+
+      // MonoSynth 貝斯 (渾厚低頻三角波)
+      bassSynth = new Tone.MonoSynth({
+        oscillator: { type: "triangle" },
+        filter: {
+          Q: 1.0,
+          type: "lowpass",
+          frequency: 130
+        },
+        envelope: {
+          attack: 0.15,
+          decay: 1.0,
+          sustain: 0.8,
+          release: 1.2
+        },
+        filterEnvelope: {
+          attack: 0.1,
+          decay: 0.8,
+          sustain: 0.6,
+          baseFrequency: 110,
+          octaves: 1.2
+        }
+      }).toDestination();
+      bassSynth.volume.value = -6;
+
+      // 旋律 Synth
+      leadSynth = new Tone.Synth({
+        oscillator: { type: "sine" },
+        envelope: {
+          attack: 0.25,
+          decay: 0.4,
+          sustain: 0.7,
+          release: 1.5
+        }
+      }).connect(delay);
+      leadSynth.volume.value = -16;
+
+      // 3. 鼓組 (MembraneSynth & NoiseSynth)
+      kickSynth = new Tone.MembraneSynth({
+        envelope: {
+          attack: 0.005,
+          decay: 0.32,
+          sustain: 0,
+          release: 0.3
+        }
+      }).toDestination();
+      kickSynth.volume.value = -3;
+
+      // Snare: 粉紅噪音帶通濾波器，製造低保真沙啞感
+      const snareFilter = new Tone.Filter({
+        type: "bandpass",
+        frequency: 1100,
+        Q: 1.2
+      }).toDestination();
+
+      snareSynth = new Tone.NoiseSynth({
+        noise: { type: "pink" },
+        envelope: {
+          attack: 0.002,
+          decay: 0.16,
+          sustain: 0
+        }
+      }).connect(snareFilter);
+      snareSynth.volume.value = -13;
+
+      // Hi-hat: 白噪音高通濾波器
+      const hatFilter = new Tone.Filter({
+        type: "highpass",
+        frequency: 7500
+      }).toDestination();
+
+      hatSynth = new Tone.NoiseSynth({
+        noise: { type: "white" },
+        envelope: {
+          attack: 0.001,
+          decay: 0.045,
+          sustain: 0
+        }
+      }).connect(hatFilter);
+      hatSynth.volume.value = -20;
+
+      // 4. 黑膠唱片劈啪聲 (Brown Noise 模擬持續沙沙聲，配上隨機 pops 劈啪聲)
+      vinylFilter = new Tone.Filter({
+        type: "bandpass",
+        frequency: 1000,
+        Q: 0.4
+      }).toDestination();
+
+      vinylHiss = new Tone.Noise("brown");
+      vinylHiss.connect(vinylFilter);
+      vinylHiss.volume.value = -28; // 低調底噪
+
+      crackleSynth = new Tone.NoiseSynth({
+        noise: { type: "white" },
+        envelope: {
+          attack: 0.001,
+          decay: 0.004, // 極短衰減
+          sustain: 0
+        }
+      }).connect(vinylFilter);
+      crackleSynth.volume.value = -16;
+
+      // 5. 頻譜/波形分析儀 (串接至總輸出，供毛玻璃 UI 動態繪製)
+      analyser = new Tone.Analyser("waveform", 256);
+      Tone.Destination.connect(analyser);
+
+      audioContextStarted = true;
+    }
+
+    // 隨機獲取貝斯根音的五音 (轉位/過渡用)
+    function getFifth(bassNote) {
+      const noteMap = {
+        "D": "A", "G": "D", "C": "G", "F": "C", 
+        "Bb": "F", "E": "B", "A": "E", "B": "F#"
+      };
+      const name = bassNote.slice(0, -1);
+      const octave = bassNote.slice(-1);
+      const fifthName = noteMap[name] || name;
+      return fifthName + octave;
+    }
+
+    // 獲取目前旋律音階 (融合調性與當前和弦音高)
+    function getMelodyScale(key, chord) {
+      const baseScale = melodyScales[key] || melodyScales["Dm"];
+      const chordTones = chord.notes.map(n => {
+        const noteName = n.slice(0, -1);
+        const octave = parseInt(n.slice(-1)) + 1; // 旋律調高一八度
+        return noteName + octave;
+      });
+      return Array.from(new Set([...baseScale, ...chordTones]));
+    }
+
+    // UI 元件參照
+    const keyValEl = document.getElementById("key-val");
+    const chordsValEl = document.getElementById("chords-val");
+    const statusValEl = document.getElementById("status-val");
+
+    function updateUIStatus(keyName, chordsText) {
+      // 確保在主執行緒安全更新 DOM
+      setTimeout(() => {
+        keyValEl.textContent = keyName + " Minor";
+        chordsValEl.textContent = chordsText;
+        statusValEl.textContent = "Playing (Looping)";
+      }, 0);
+    }
+
+    // 音樂排程：核心 30 秒自動隨機生成邏輯
+    let musicGenerationEventId = null;
+    let drumEventId = null;
+    let crackleEventId = null;
+
+    function startMusicEngine() {
+      initAudio();
+      
+      // 啟動唱片底噪
+      vinylHiss.start();
+
+      const beatSec = Tone.Time("4n").toSeconds();
+      const measureSec = beatSec * 4; // 1小節 = 3秒 (80 BPM 下)
+
+      // A. 隨機黑膠唱片劈啪聲排程 (利用 16n 的 22% 機率隨機觸發極短噪音)
+      crackleEventId = Tone.Transport.scheduleRepeat((time) => {
+        if (Math.random() < 0.22) {
+          const vel = 0.06 + Math.random() * 0.16;
+          crackleSynth.triggerAttack(time, vel);
+        }
+      }, "16n");
+
+      // B. 鼓組 2 小節 (6 秒) 自動循環
+      // Boom-Bap 經典 Lo-Fi 律動：Kick 重音與隨機搖擺 Snare
+      drumEventId = Tone.Transport.scheduleRepeat((time) => {
+        const trigger = (inst, beatOffset, vel = 1.0) => {
+          const t = time + beatOffset * beatSec;
+          if (inst === "kick") kickSynth.triggerAttackRelease("C1", "8n", t, vel);
+          else if (inst === "snare") snareSynth.triggerAttack(t, vel);
+          else if (inst === "hat") hatSynth.triggerAttack(t, vel);
+        };
+
+        // Measure 0
+        trigger("kick", 0, 1.0);
+        trigger("hat", 0.5, 0.45);
+        trigger("snare", 1.0, 0.85);
+        trigger("hat", 1.5, 0.5);
+        trigger("kick", 1.75, 0.65); // 搖擺 Kick (Swing Accent)
+        trigger("hat", 2.0, 0.45);
+        trigger("hat", 2.5, 0.55);
+        trigger("snare", 3.0, 0.85);
+        trigger("hat", 3.5, 0.6);
+
+        // Measure 1
+        trigger("kick", 4.0, 1.0);
+        trigger("hat", 4.5, 0.45);
+        trigger("snare", 5.0, 0.85);
+        trigger("hat", 5.5, 0.5);
+        trigger("kick", 6.0, 0.8);
+        trigger("hat", 6.5, 0.45);
+        trigger("snare", 7.0, 0.85);
+        trigger("hat", 7.5, 0.6);
+        if (Math.random() < 0.4) {
+          trigger("snare", 7.75, 0.25); // 幽靈音 (Ghost snare)
+        }
+      }, "2m");
+
+      // C. 30 秒 (10 小節) 主體音樂段落生成器
+      // 每次運作生成全新調性、和弦與隨機旋律
+      musicGenerationEventId = Tone.Transport.scheduleRepeat((time) => {
+        // 隨機選取調性
+        const keys = ["Dm", "Am", "Gm"];
+        const key = keys[Math.floor(Math.random() * keys.length)];
+        
+        // 四種經典 Lo-Fi 爵士和弦進行公式
+        const progressionBlueprints = [
+          ["i9", "iv9", "VII9", "IIImaj9", "VImaj7"],
+          ["i9", "VImaj7", "iv9", "ii7b5", "V7b9"],
+          ["iv9", "VII9", "IIImaj9", "VImaj7", "i9"],
+          ["VImaj7", "VII9", "i9", "ii7b5", "V7b9"]
+        ];
+        const selectedProg = progressionBlueprints[Math.floor(Math.random() * progressionBlueprints.length)];
+        
+        // 抓取對應和弦結構
+        const chords = selectedProg.map(type => chordDatabase[key][type]);
+        
+        // 更新 UI 狀態
+        updateUIStatus(key, chords.map(c => c.name).join(" ➔ "));
+
+        // 排程接下來 of 10 個小節 (每個和弦 2 小節 = 6 秒)
+        for (let i = 0; i < chords.length; i++) {
+          const chord = chords[i];
+          const chordTime = time + i * 2 * measureSec;
+
+          // 1. 和弦 (PolySynth) - 柔和長音，小節結束前淡出
+          chordsSynth.triggerAttackRelease(chord.notes, 1.8 * measureSec, chordTime, 0.55);
+
+          // 2. 貝斯 (MonoSynth) - 雙小節慵懶切分音律動
+          bassSynth.triggerAttackRelease(chord.bass, 1.5 * measureSec, chordTime, 0.85);
+          // 第二小節第 6 拍加入五音銜接
+          const fifth = getFifth(chord.bass);
+          bassSynth.triggerAttackRelease(fifth, 0.25 * measureSec, chordTime + 6 * beatSec, 0.6);
+
+          // 3. 旋律 (Synth) - 75% 機率產生一段隨機爵士感即興旋律
+          if (Math.random() < 0.75) {
+            const notesCount = 2 + Math.floor(Math.random() * 3); // 2~4 個音符
+            const scale = getMelodyScale(key, chord);
+            
+            // 隨機挑選音符落點 (避開過度緊密，製造 Lo-Fi 的呼吸空隙)
+            const availableBeats = [1, 2, 3, 4.5, 5, 6, 6.5];
+            const selectedBeats = [];
+            while (selectedBeats.length < notesCount) {
+              const b = availableBeats[Math.floor(Math.random() * availableBeats.length)];
+              if (!selectedBeats.includes(b)) selectedBeats.push(b);
+            }
+            selectedBeats.sort((a, b) => a - b);
+
+            selectedBeats.forEach(beat => {
+              const note = scale[Math.floor(Math.random() * scale.length)];
+              const noteTime = chordTime + beat * beatSec;
+              const noteDuration = (0.5 + Math.random() * 1.5) * beatSec;
+              
+              // 隨機力度，製造人性化的彈奏質感
+              const vel = 0.35 + Math.random() * 0.35;
+              leadSynth.triggerAttackRelease(note, noteDuration, noteTime, vel);
+            });
+          }
+        }
+      }, "10m", "0m");
+
+      // 啟動時間軸
+      Tone.Transport.start();
+    }
+
+    function stopMusicEngine() {
+      if (!audioContextStarted) return;
+
+      // 暫停時間軸與清除排程
+      Tone.Transport.stop();
+      Tone.Transport.cancel();
+
+      // 靜音所有樂器
+      if (vinylHiss) vinylHiss.stop();
+      if (chordsSynth) chordsSynth.releaseAll();
+      if (bassSynth) bassSynth.triggerRelease();
+      if (leadSynth) leadSynth.triggerRelease();
+
+      isPlaying = false;
+      
+      // 更新 UI 狀態
+      keyValEl.textContent = "-";
+      chordsValEl.textContent = "Standby";
+      statusValEl.textContent = "Stopped";
+    }
+
+
+    // ==========================================
+    // 3. UI 介面交互控制
+    // ==========================================
+    const btnPlay = document.getElementById("btn-play");
+    const btnStop = document.getElementById("btn-stop");
+    const controlPanel = document.getElementById("control-panel");
+
+    btnPlay.addEventListener("click", async () => {
+      if (isPlaying) return;
+      
+      isPlaying = true;
+      controlPanel.classList.add("playing");
+      btnPlay.innerHTML = "<span>✨ 生成中...</span>";
+      
+      try {
+        // 初始化或恢復音訊脈絡
+        await Tone.start();
+        
+        // 啟動排程
+        startMusicEngine();
+        
+        btnPlay.innerHTML = "<span>✨ 播放中</span>";
+      } catch (err) {
+        console.error("無法啟動音訊引擎:", err);
+        isPlaying = false;
+        controlPanel.classList.remove("playing");
+        btnPlay.innerHTML = "<span>✨ 產生 30 秒循環</span>";
+      }
+    });
+
+    btnStop.addEventListener("click", () => {
+      stopMusicEngine();
+      controlPanel.classList.remove("playing");
+      btnPlay.innerHTML = "<span>✨ 產生 30 秒循環</span>";
+    });
+
+
+    // ==========================================
+    // 4. 音訊波形視覺化 (毛玻璃 Panel 內建)
+    // ==========================================
+    const vizCanvas = document.getElementById("visualizer");
+    const vizCtx = vizCanvas.getContext("2d");
+
+    function renderVisualizer() {
+      requestAnimationFrame(renderVisualizer);
+      
+      const w = vizCanvas.width = vizCanvas.clientWidth;
+      const h = vizCanvas.height = vizCanvas.clientHeight;
+      
+      vizCtx.clearRect(0, 0, w, h);
+      
+      // 繪製背景微弱格線
+      vizCtx.strokeStyle = "rgba(255, 255, 255, 0.04)";
+      vizCtx.lineWidth = 1;
+      for (let i = 1; i < 4; i++) {
+        vizCtx.beginPath();
+        vizCtx.moveTo(0, (h / 4) * i);
+        vizCtx.lineTo(w, (h / 4) * i);
+        vizCtx.stroke();
+      }
+
+      // 設定波形樣式 (霓虹粉紅)
+      vizCtx.beginPath();
+      vizCtx.strokeStyle = "rgba(255, 42, 133, 0.85)";
+      vizCtx.shadowColor = "rgba(255, 42, 133, 0.4)";
+      vizCtx.shadowBlur = 6;
+      vizCtx.lineWidth = 2.5;
+
+      if (isPlaying && analyser) {
+        // 從波形分析儀讀取振幅資料
+        const values = analyser.getValue();
+        const len = values.length;
+        
+        for (let i = 0; i < len; i++) {
+          const x = (i / (len - 1)) * w;
+          const val = values[i];
+          // 縮放波形，使其保持在畫布正中
+          const y = (h / 2) + val * (h / 2) * 0.9;
+          
+          if (i === 0) {
+            vizCtx.moveTo(x, y);
+          } else {
+            vizCtx.lineTo(x, y);
+          }
+        }
+      } else {
+        // 閒置狀態：繪製緩慢起伏的平滑正弦波
+        const time = Date.now() * 0.0035;
+        for (let x = 0; x < w; x++) {
+          const y = (h / 2) + Math.sin(x * 0.04 - time) * 3;
+          if (x === 0) {
+            vizCtx.moveTo(x, y);
+          } else {
+            vizCtx.lineTo(x, y);
+          }
+        }
+      }
+      
+      vizCtx.stroke();
+      vizCtx.shadowBlur = 0; // 重置陰影防溢出
+    }
+
+    renderVisualizer();
+  </script>
+</body>
+</html>
