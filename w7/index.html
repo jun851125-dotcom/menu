@@ -998,6 +998,11 @@
     let drumEventId = null;
     let crackleEventId = null;
 
+    // 追蹤當前 10 小節和弦循環的狀態
+    let chordIndex = 0;
+    let currentChords = [];
+    let currentKey = "";
+
     function startMusicEngine() {
       initAudio();
       
@@ -1050,68 +1055,71 @@
         }
       }, "2m");
 
-      // C. 30 秒 (10 小節) 主體音樂段落生成器
-      // 每次運作生成全新調性、和弦與隨機旋律
+      // C. 30 秒 (10 小節) 主體音樂段落生成器 - 每 2 小節 (6 秒) 觸發一次，以便即時響應停止指令
+      chordIndex = 0;
+      currentChords = [];
+      currentKey = "";
+      
+      // 確保總輸出是未靜音狀態
+      Tone.Destination.mute = false;
+
       musicGenerationEventId = Tone.Transport.scheduleRepeat((time) => {
-        // 隨機選取調性
-        const keys = ["Dm", "Am", "Gm"];
-        const key = keys[Math.floor(Math.random() * keys.length)];
-        
-        // 四種經典 Lo-Fi 爵士和弦進行公式
-        const progressionBlueprints = [
-          ["i9", "iv9", "VII9", "IIImaj9", "VImaj7"],
-          ["i9", "VImaj7", "iv9", "ii7b5", "V7b9"],
-          ["iv9", "VII9", "IIImaj9", "VImaj7", "i9"],
-          ["VImaj7", "VII9", "i9", "ii7b5", "V7b9"]
-        ];
-        const selectedProg = progressionBlueprints[Math.floor(Math.random() * progressionBlueprints.length)];
-        
-        // 抓取對應和弦結構
-        const chords = selectedProg.map(type => chordDatabase[key][type]);
-        
-        // 更新 UI 狀態
-        updateUIStatus(key, chords.map(c => c.name).join(" ➔ "));
-
-        // 排程接下來 of 10 個小節 (每個和弦 2 小節 = 6 秒)
-        for (let i = 0; i < chords.length; i++) {
-          const chord = chords[i];
-          const chordTime = time + i * 2 * measureSec;
-
-          // 1. 和弦 (PolySynth) - 柔和長音，小節結束前淡出
-          chordsSynth.triggerAttackRelease(chord.notes, 1.8 * measureSec, chordTime, 0.55);
-
-          // 2. 貝斯 (MonoSynth) - 雙小節慵懶切分音律動
-          bassSynth.triggerAttackRelease(chord.bass, 1.5 * measureSec, chordTime, 0.85);
-          // 第二小節第 6 拍加入五音銜接
-          const fifth = getFifth(chord.bass);
-          bassSynth.triggerAttackRelease(fifth, 0.25 * measureSec, chordTime + 6 * beatSec, 0.6);
-
-          // 3. 旋律 (Synth) - 75% 機率產生一段隨機爵士感即興旋律
-          if (Math.random() < 0.75) {
-            const notesCount = 2 + Math.floor(Math.random() * 3); // 2~4 個音符
-            const scale = getMelodyScale(key, chord);
-            
-            // 隨機挑選音符落點 (避開過度緊密，製造 Lo-Fi 的呼吸空隙)
-            const availableBeats = [1, 2, 3, 4.5, 5, 6, 6.5];
-            const selectedBeats = [];
-            while (selectedBeats.length < notesCount) {
-              const b = availableBeats[Math.floor(Math.random() * availableBeats.length)];
-              if (!selectedBeats.includes(b)) selectedBeats.push(b);
-            }
-            selectedBeats.sort((a, b) => a - b);
-
-            selectedBeats.forEach(beat => {
-              const note = scale[Math.floor(Math.random() * scale.length)];
-              const noteTime = chordTime + beat * beatSec;
-              const noteDuration = (0.5 + Math.random() * 1.5) * beatSec;
-              
-              // 隨機力度，製造人性化的彈奏質感
-              const vel = 0.35 + Math.random() * 0.35;
-              leadSynth.triggerAttackRelease(note, noteDuration, noteTime, vel);
-            });
-          }
+        // 如果還沒有生成當前的和弦進程，或者已經播完 5 個和弦，重新生成一組
+        if (chordIndex === 0 || currentChords.length === 0) {
+          const keys = ["Dm", "Am", "Gm"];
+          currentKey = keys[Math.floor(Math.random() * keys.length)];
+          
+          // 四種經典 Lo-Fi 爵士和弦進行公式
+          const progressionBlueprints = [
+            ["i9", "iv9", "VII9", "IIImaj9", "VImaj7"],
+            ["i9", "VImaj7", "iv9", "ii7b5", "V7b9"],
+            ["iv9", "VII9", "IIImaj9", "VImaj7", "i9"],
+            ["VImaj7", "VII9", "i9", "ii7b5", "V7b9"]
+          ];
+          const selectedProg = progressionBlueprints[Math.floor(Math.random() * progressionBlueprints.length)];
+          currentChords = selectedProg.map(type => chordDatabase[currentKey][type]);
+          
+          // 更新 UI 狀態
+          updateUIStatus(currentKey, currentChords.map(c => c.name).join(" ➔ "));
         }
-      }, "10m", "0m");
+
+        const chord = currentChords[chordIndex];
+
+        // 1. 和弦 (PolySynth) - 播放當前和弦，小節結束前淡出
+        chordsSynth.triggerAttackRelease(chord.notes, 1.8 * measureSec, time, 0.55);
+
+        // 2. 貝斯 (MonoSynth) - 雙小節慵懶切分音律動
+        bassSynth.triggerAttackRelease(chord.bass, 1.5 * measureSec, time, 0.85);
+        // 第二小節第 6 拍加入五音銜接
+        const fifth = getFifth(chord.bass);
+        bassSynth.triggerAttackRelease(fifth, 0.25 * measureSec, time + 6 * beatSec, 0.6);
+
+        // 3. 旋律 (Synth) - 75% 機率產生一段隨機爵士感即興旋律 (只在當前 2 小節內排程)
+        if (Math.random() < 0.75) {
+          const notesCount = 2 + Math.floor(Math.random() * 3); // 2~4 個音符
+          const scale = getMelodyScale(currentKey, chord);
+          
+          // 隨機挑選音符落點 (避開過度緊密，製造 Lo-Fi 的呼吸空隙)
+          const availableBeats = [1, 2, 3, 4.5, 5, 6, 6.5];
+          const selectedBeats = [];
+          while (selectedBeats.length < notesCount) {
+            const b = availableBeats[Math.floor(Math.random() * availableBeats.length)];
+            if (!selectedBeats.includes(b)) selectedBeats.push(b);
+          }
+          selectedBeats.sort((a, b) => a - b);
+
+          selectedBeats.forEach(beat => {
+            const note = scale[Math.floor(Math.random() * scale.length)];
+            const noteTime = time + beat * beatSec;
+            const noteDuration = (0.5 + Math.random() * 1.5) * beatSec;
+            const vel = 0.35 + Math.random() * 0.35;
+            leadSynth.triggerAttackRelease(note, noteDuration, noteTime, vel);
+          });
+        }
+
+        // 往後推進一個和弦 (0~4 循環)
+        chordIndex = (chordIndex + 1) % 5;
+      }, "2m", "0m");
 
       // 啟動時間軸
       Tone.Transport.start();
@@ -1124,11 +1132,19 @@
       Tone.Transport.stop();
       Tone.Transport.cancel();
 
-      // 靜音所有樂器
+      // 立即靜音總輸出，保證聲音完全消失
+      Tone.Destination.mute = true;
+
+      // 靜音所有樂器與停止音訊源
       if (vinylHiss) vinylHiss.stop();
       if (chordsSynth) chordsSynth.releaseAll();
       if (bassSynth) bassSynth.triggerRelease();
       if (leadSynth) leadSynth.triggerRelease();
+
+      // 重置和弦循環狀態
+      chordIndex = 0;
+      currentChords = [];
+      currentKey = "";
 
       isPlaying = false;
       
