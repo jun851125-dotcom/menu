@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Papagaio - 巴西葡萄牙語卡通學習遊戲</title>
+  <meta name="description" content="專為國高中生設計的巴西葡萄牙語複習遊戲！重複練習單字句型、點擊即時發音、累積經驗值與鑽石，解鎖鸚鵡 Lico 的酷炫裝扮！">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- Game Box Container -->
+  <div class="game-container">
+    
+    <!-- Top Header Bar -->
+    <header class="game-header">
+      <div class="stats-group">
+        <!-- Streak -->
+        <div class="stat-badge streak" title="每日連續練習天數">
+          <span>🔥</span> <span id="stat-streak">0</span> 天
+        </div>
+        <!-- XP -->
+        <div class="stat-badge xp" title="經驗值">
+          <span>⭐</span> <span id="stat-xp">0</span> XP
+        </div>
+        <!-- Diamonds -->
+        <div class="stat-badge diamonds" title="累積鑽石">
+          <span>💎</span> <span id="stat-diamonds">10</span> 顆
+        </div>
+      </div>
+      
+      <!-- Current Level Status -->
+      <div class="level-badge" id="level-badge-text">Level 1</div>
+    </header>
+
+    <!-- Main Game Body -->
+    <main class="game-body">
+      
+      <!-- Mascot Left Pane -->
+      <section class="mascot-area">
+        <!-- Mascot speech bubble -->
+        <div class="mascot-speech-bubble" id="mascot-bubble">
+          Olá! 我是鸚鵡 Lico，準備好練習葡萄牙語了嗎？
+        </div>
+        
+        <!-- Animated SVG Mascot -->
+        <div class="mascot-container" onclick="speakPortuguese('Lico o papagaio!')">
+          <svg class="mascot-svg" viewBox="0 0 200 200" width="100%" height="100%">
+            <!-- Shadow -->
+            <ellipse cx="100" cy="180" rx="60" ry="12" fill="#000000" opacity="0.1" />
+            
+            <!-- Tail feathers -->
+            <path d="M 120 140 L 160 180 L 140 130 Z" fill="#10b981" stroke="#0f172a" stroke-width="4" stroke-linejoin="round" />
+            <path d="M 110 145 L 145 190 L 130 135 Z" fill="#f59e0b" stroke="#0f172a" stroke-width="4" stroke-linejoin="round" />
+            
+            <!-- Left Wing -->
+            <g id="mascot-wing-l">
+              <path d="M 45 90 C 25 100 15 120 30 140 C 45 160 65 140 55 110 Z" fill="#10b981" stroke="#0f172a" stroke-width="4" stroke-linejoin="round" />
+            </g>
+            
+            <!-- Right Wing -->
+            <g id="mascot-wing-r">
+              <path d="M 155 90 C 175 100 185 120 170 140 C 155 160 135 140 145 110 Z" fill="#10b981" stroke="#0f172a" stroke-width="4" stroke-linejoin="round" />
+            </g>
+            
+            <!-- Body -->
+            <circle cx="100" cy="110" r="60" fill="#10b981" stroke="#0f172a" stroke-width="4" />
+            
+            <!-- Belly (Yellow) -->
+            <ellipse cx="100" cy="130" rx="35" ry="30" fill="#f59e0b" stroke="#0f172a" stroke-width="4" />
+            
+            <!-- Beak -->
+            <path d="M 85 85 C 85 85 100 120 100 120 C 100 120 115 85 115 85 C 115 70 85 70 85 85 Z" fill="#f97316" stroke="#0f172a" stroke-width="4" stroke-linejoin="round" />
+            
+            <!-- Eyes -->
+            <g id="mascot-eye-l">
+              <circle cx="75" cy="60" r="10" fill="#0f172a" />
+              <circle cx="72" cy="57" r="4" fill="white" />
+            </g>
+            <g id="mascot-eye-r">
+              <circle cx="125" cy="60" r="10" fill="#0f172a" />
+              <circle cx="122" cy="57" r="4" fill="white" />
+            </g>
+            
+            <!-- Cheeks -->
+            <ellipse cx="60" cy="75" rx="8" ry="5" fill="#f43f5e" opacity="0.6" />
+            <ellipse cx="140" cy="75" rx="8" ry="5" fill="#f43f5e" opacity="0.6" />
+            
+            <!-- Feet -->
+            <circle cx="85" cy="172" r="8" fill="#f97316" stroke="#0f172a" stroke-width="4" />
+            <circle cx="115" cy="172" r="8" fill="#f97316" stroke="#0f172a" stroke-width="4" />
+            
+            <!-- Accessories Overlay (Display none by default) -->
+            
+            <!-- Soccer Jersey -->
+            <g id="mascot-soccer-jersey" style="display: none;">
+              <path d="M 68 115 C 68 95 132 95 132 115 C 130 155 70 155 68 115 Z" fill="#2563eb" stroke="#0f172a" stroke-width="4" />
+              <path d="M 90 102 L 90 148" stroke="#facc15" stroke-width="6" />
+              <path d="M 110 102 L 110 148" stroke="#facc15" stroke-width="6" />
+            </g>
+            
+            <!-- Cool Sunglasses -->
+            <g id="mascot-cool-sunglasses" style="display: none;">
+              <path d="M 55 52 L 90 52 L 85 72 L 60 72 Z" fill="#1e293b" stroke="#0f172a" stroke-width="4" stroke-linejoin="round" />
+              <path d="M 110 52 L 145 52 L 140 72 L 115 72 Z" fill="#1e293b" stroke="#0f172a" stroke-width="4" stroke-linejoin="round" />
+              <line x1="90" y1="58" x2="110" y2="58" stroke="#0f172a" stroke-width="5" />
+              <line x1="62" y1="58" x2="70" y2="66" stroke="white" stroke-width="2" />
+              <line x1="117" y1="58" x2="125" y2="66" stroke="white" stroke-width="2" />
+            </g>
+            
+            <!-- Party Hat -->
+            <g id="mascot-party-hat" style="display: none;">
+              <path d="M 100 8 L 70 42 L 130 42 Z" fill="#ec4899" stroke="#0f172a" stroke-width="4" stroke-linejoin="round" />
+              <circle cx="90" cy="32" r="4" fill="#facc15" />
+              <circle cx="110" cy="28" r="4" fill="#3b82f6" />
+              <circle cx="100" cy="20" r="3" fill="#22c55e" />
+              <circle cx="100" cy="5" r="7" fill="#f43f5e" stroke="#0f172a" stroke-width="3" />
+            </g>
+            
+            <!-- Graduation Hat -->
+            <g id="mascot-grad-hat" style="display: none;">
+              <polygon points="100,15 145,28 100,41 55,28" fill="#1e293b" stroke="#0f172a" stroke-width="4" />
+              <path d="M 75 28 L 75 42 C 75 48 125 48 125 42 L 125 28 Z" fill="#334155" stroke="#0f172a" stroke-width="3" />
+              <path d="M 100 28 L 138 32 L 142 50" fill="none" stroke="#facc15" stroke-width="3" />
+              <polygon points="142,50 138,58 146,58" fill="#facc15" />
+            </g>
+          </svg>
+        </div>
+      </section>
+
+      <!-- Right Active Play Area -->
+      <section class="play-area">
+        
+        <!-- Screen 1: Home Dashboard -->
+        <div class="screen active" id="screen-home">
+          <div style="text-align: center;">
+            <h2 style="font-size: 1.8rem; font-weight: 800; margin-bottom: 5px;">Selecione um Tema 📚</h2>
+            <p style="color: var(--color-text-light);">完成每一個關卡複習，隨時可以點擊單字發音！</p>
+          </div>
+          
+          <!-- Category Grid -->
+          <div class="category-grid" id="category-grid">
+            <!-- Populated dynamically -->
+          </div>
+          
+          <!-- Level Gate Trigger -->
+          <div style="text-align: center; margin-top: 15px;">
+            <button class="btn-bubble btn-secondary" onclick="requestLevelUp()" id="btn-gate-trigger">
+              🎓 挑戰進階測驗 (解鎖新等級)
+            </button>
+          </div>
+        </div>
+
+        <!-- Screen 2: Practice / Flashcards -->
+        <div class="screen" id="screen-practice">
+          <h2 id="practice-title" style="text-align: center; font-size: 1.5rem;">Level 1 - 複習 (1/5)</h2>
+          
+          <div class="vocab-card-container">
+            <!-- Flip Flashcard -->
+            <div class="vocab-card" onclick="flipCard()">
+              <div class="vocab-card-inner">
+                <!-- Front Side -->
+                <div class="vocab-card-front">
+                  <div class="word-pt" id="card-word-pt">Bom dia! Como você está?</div>
+                  <div class="card-hint">🔄 點擊卡片看中文翻譯</div>
+                </div>
+                <!-- Back Side -->
+                <div class="vocab-card-back">
+                  <div class="word-zh" id="card-word-zh">早上好！你怎麼樣？</div>
+                  <div class="word-example" id="card-word-example">例句：Bom dia! Como você está?</div>
+                  <div class="card-hint">🔄 點擊卡片回正面</div>
+                </div>
+              </div>
+            </div>
+            
+            <!-- Controls: Pronunciation and speed -->
+            <div class="tts-controls">
+              <button class="btn-bubble btn-primary btn-icon" onclick="event.stopPropagation(); speakPortuguese(document.getElementById('card-word-pt').innerText);" title="點擊發音">
+                🔊
+              </button>
+              <button class="btn-bubble btn-secondary" id="rate-toggle-btn" onclick="event.stopPropagation(); toggleSpeechRate();" title="調整發音速度">
+                ⚡ 正常音速
+              </button>
+            </div>
+          </div>
+          
+          <!-- Navigation -->
+          <div style="display: flex; justify-content: space-between; margin-top: 10px;">
+            <button class="btn-bubble btn-accent" onclick="prevPracticeItem()">◀ 上一個</button>
+            <button class="btn-bubble btn-accent" onclick="nextPracticeItem()">下一個 ▶</button>
+          </div>
+        </div>
+
+        <!-- Screen 3: Practice finished options -->
+        <div class="screen" id="screen-practice-finished" style="text-align: center; justify-content: center; gap: 30px;">
+          <div>
+            <h2 style="font-size: 2rem; font-weight: 800; margin-bottom: 10px; color: var(--color-primary-dark);">🎉 複習完成！</h2>
+            <p style="color: var(--color-text-light); font-size: 1.1rem; margin-bottom: 20px;">
+              你已經看完了這組所有的單字。現在可以重複練習，或是直接進行小測驗挑戰獲得更多鑽石獎勵！
+            </p>
+            <div style="font-size: 1.2rem; font-weight: 800; color: #b45309; margin-bottom: 10px;">
+              🏆 獲得獎勵：+1 💎 & +10 XP
+            </div>
+          </div>
+          
+          <div style="display: flex; flex-direction: column; gap: 15px; max-width: 320px; margin: 0 auto; width: 100%;">
+            <button class="btn-bubble btn-primary" onclick="startCategoryChallenge()">
+              ⚔️ 開始小挑戰 (答對送 3 💎)
+            </button>
+            <button class="btn-bubble btn-secondary" onclick="startPractice(state.activeCategoryIndex)">
+              🔄 再次複習單字 (可天天練習)
+            </button>
+            <button class="btn-bubble btn-accent" onclick="switchScreen('screen-home')">
+              🏠 返回主題首頁
+            </button>
+          </div>
+        </div>
+
+        <!-- Screen 4: Challenge / Quiz screen -->
+        <div class="screen" id="screen-challenge">
+          <div style="display: flex; justify-content: space-between; align-items: center;">
+            <h2 id="challenge-q-title" style="font-size: 1.4rem;">題目 1/3</h2>
+            <!-- Progress Bar -->
+            <div style="width: 150px;" class="level-progress-outer">
+              <div id="challenge-progress-bar" class="level-progress-inner"></div>
+            </div>
+          </div>
+          
+          <div class="quiz-question-container" id="challenge-q-box">
+            題目載入中...
+          </div>
+          
+          <!-- Special Listening button (Only visible in listening quiz) -->
+          <div style="text-align: center; margin-bottom: 15px;">
+            <button class="btn-bubble btn-primary" id="challenge-listen-btn" onclick="speakPortuguese(challengeQuestions[currentQuestionIndex].audioText);">
+              🔊 點我重聽發音
+            </button>
+          </div>
+          
+          <!-- Multiple Choice Options Area -->
+          <div class="options-grid" id="challenge-options-area">
+            <div id="challenge-options-grid">
+              <!-- Choices populated dynamically -->
+            </div>
+          </div>
+          
+          <!-- Sentence Unscramble Area -->
+          <div id="challenge-unscramble-area" style="display: none;">
+            <div class="puzzle-slots-container" id="puzzle-slots">
+              <!-- Selection slots -->
+            </div>
+            
+            <div class="puzzle-bubble-container" id="puzzle-bubbles">
+              <!-- Bubble pools -->
+            </div>
+            
+            <div style="text-align: center;">
+              <button class="btn-bubble btn-primary" id="puzzle-check-btn" onclick="checkPuzzleAnswer()">
+                ✅ 送出答案
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Screen 5: Challenge Results -->
+        <div class="screen" id="screen-challenge-results" style="text-align: center; justify-content: center; gap: 20px;">
+          <div>
+            <h2 style="font-size: 2.2rem; font-weight: 800; margin-bottom: 10px; color: var(--color-primary-dark);" id="challenge-result-header">挑戰結束！</h2>
+            <p id="challenge-result-text" style="font-size: 1.2rem; margin-bottom: 15px;">做得好！</p>
+            <p id="challenge-result-stats" style="font-size: 1.1rem; color: var(--color-text-light); margin-bottom: 30px;">
+              正確數: 3/3
+            </p>
+          </div>
+          
+          <div style="display: flex; gap: 15px; justify-content: center; flex-wrap: wrap;">
+            <button class="btn-bubble btn-secondary" onclick="startCategoryChallenge()">
+              🔄 重複挑戰 (獲取鑽石)
+            </button>
+            <button class="btn-bubble btn-accent" onclick="switchScreen('screen-home')">
+              🏠 回到首頁
+            </button>
+          </div>
+        </div>
+
+        <!-- Screen 6: Level Gate Quiz -->
+        <div class="screen" id="screen-level-gate">
+          <div style="display: flex; justify-content: space-between; align-items: center;">
+            <h2 id="level-gate-q-title" style="font-size: 1.4rem; color: var(--color-secondary-dark);">進階測驗 1/5</h2>
+            <div style="width: 150px;" class="level-progress-outer">
+              <div id="level-gate-progress-bar" class="level-progress-inner"></div>
+            </div>
+          </div>
+          
+          <div class="quiz-question-container" id="level-gate-q-box" style="border-color: var(--color-secondary);">
+            題目載入中...
+          </div>
+          
+          <!-- Special Listening button -->
+          <div style="text-align: center; margin-bottom: 15px;">
+            <button class="btn-bubble btn-primary" id="level-gate-listen-btn" onclick="speakPortuguese(challengeQuestions[currentQuestionIndex].audioText);">
+              🔊 重聽發音
+            </button>
+          </div>
+          
+          <!-- Multiple Choice -->
+          <div class="options-grid" id="level-gate-options-area">
+            <div id="level-gate-options-grid">
+              <!-- Choices populated dynamically -->
+            </div>
+          </div>
+          
+          <!-- Sentence Unscramble -->
+          <div id="level-gate-unscramble-area" style="display: none;">
+            <div class="puzzle-slots-container" id="level-gate-puzzle-slots">
+              <!-- Selection slots -->
+            </div>
+            
+            <div class="puzzle-bubble-container" id="level-gate-puzzle-bubbles">
+              <!-- Bubble pools -->
+            </div>
+            
+            <div style="text-align: center;">
+              <button class="btn-bubble btn-primary" id="level-gate-puzzle-check-btn" onclick="checkLevelGatePuzzleAnswer()">
+                ✅ 送出答案
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Screen 7: Level Gate Results -->
+        <div class="screen" id="screen-level-gate-results" style="text-align: center; justify-content: center; gap: 20px;">
+          <div>
+            <h2 style="font-size: 2.2rem; font-weight: 800; margin-bottom: 10px; color: var(--color-secondary-dark);">進階測驗結束</h2>
+            <p id="level-gate-result-text" style="font-size: 1.2rem; margin-bottom: 15px; font-weight: 700;">結果計算中...</p>
+            <p id="level-gate-result-stats" style="font-size: 1.1rem; color: var(--color-text-light); margin-bottom: 30px;">
+              答對題數: 4/5
+            </p>
+          </div>
+          
+          <div style="display: flex; gap: 15px; justify-content: center; flex-wrap: wrap;">
+            <button class="btn-bubble btn-accent" onclick="switchScreen('screen-home')">
+              🏠 回到首頁
+            </button>
+          </div>
+        </div>
+
+      </section>
+
+    </main>
+    
+    <!-- Footer / Navigation Bar -->
+    <footer class="navigation-bar">
+      <div style="font-size: 0.9rem; color: var(--color-text-light); display: flex; align-items: center; gap: 6px;">
+        <span>🇧🇷</span> 每日重複學習，累積鑽石升級裝扮！
+      </div>
+      <!-- Shop Trigger -->
+      <button class="btn-bubble btn-secondary" onclick="openShop()" style="padding: 10px 20px; font-size: 1rem;">
+        🛍️ Lico 的衣帽間
+      </button>
+    </footer>
+
+  </div>
+
+  <!-- Shop Modal Overlay -->
+  <div class="modal-overlay" id="shop-overlay" onclick="closeShop()">
+    <div class="modal-content" onclick="event.stopPropagation()">
+      <div class="modal-header">
+        <h3 class="modal-title">🛍️ Lico 的衣帽間</h3>
+        <button class="btn-bubble btn-danger btn-icon" onclick="closeShop()">❌</button>
+      </div>
+      <p style="color: var(--color-text-light); text-align: center; font-size: 0.95rem;">
+        用累積的鑽石 💎 為鸚鵡 Lico 購買各種造型吧！裝備後 Lico 會穿著跟著你一起上課喔！
+      </p>
+      
+      <!-- Costume item grid -->
+      <div class="shop-grid" id="shop-grid">
+        <!-- Shop items populated dynamically -->
+      </div>
+    </div>
+  </div>
+
+  <!-- Confetti Canvas overlay -->
+  <canvas id="confetti-canvas"></canvas>
+
+  <script src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CyberBreak - 霓虹打磚塊</title>
+  <!-- Google Fonts: Orbitron for Sci-Fi Retro and Inter for interface -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Orbitron:wght@500;700;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!-- Background Parallax Canvas for space stars/dust -->
+  <canvas id="bg-canvas"></canvas>
+
+  <!-- CRT Screen Filter overlay -->
+  <div class="crt-overlay"></div>
+
+  <!-- Main Game Container -->
+  <div id="game-wrapper">
+    <!-- Header HUD -->
+    <header id="game-hud">
+      <div class="hud-item" id="hud-level">
+        <span class="label">LEVEL</span>
+        <span class="value" id="level-val">1</span>
+      </div>
+      <div class="hud-item" id="hud-score">
+        <span class="label">SCORE</span>
+        <span class="value" id="score-val">00000</span>
+      </div>
+      <div class="hud-item" id="hud-high">
+        <span class="label">HIGH SCORE</span>
+        <span class="value" id="high-score-val">00000</span>
+      </div>
+      <div class="hud-item" id="hud-lives">
+        <span class="label">LIVES</span>
+        <div id="lives-container">
+          <!-- Dynamically generated heart icons -->
+        </div>
+      </div>
+    </header>
+
+    <!-- Canvas & Overlays Viewport -->
+    <div id="viewport">
+      <canvas id="game-canvas" width="800" height="500"></canvas>
+
+      <!-- Overlay Screen: Start Menu -->
+      <div class="screen-overlay active" id="start-screen">
+        <h1 class="game-title">CYBER<span class="neon-magenta">BREAK</span></h1>
+        <p class="game-subtitle">霓虹打磚塊傳奇</p>
+        
+        <div class="start-menu-content">
+          <button class="btn btn-primary" id="start-btn">開始遊戲</button>
+          
+          <div class="instructions-panel">
+            <h3>寶物說明</h3>
+            <div class="powerup-legend-grid">
+              <div class="legend-item">
+                <span class="badge badge-lengthen">🌟</span>
+                <span>球拍加長 (10s)</span>
+              </div>
+              <div class="legend-item">
+                <span class="badge badge-shorten">💀</span>
+                <span>球拍變短 (10s)</span>
+              </div>
+              <div class="legend-item">
+                <span class="badge badge-faster">⚡</span>
+                <span>球速變快 (10s)</span>
+              </div>
+              <div class="legend-item">
+                <span class="badge badge-slower">❄️</span>
+                <span>球速變慢 (10s)</span>
+              </div>
+              <div class="legend-item">
+                <span class="badge badge-fireball">🔥</span>
+                <span>終極火球 (8s)</span>
+              </div>
+            </div>
+            <div class="control-hints">
+              <p>滑鼠移動 或 鍵盤左右方向鍵 [←][→] 控制球拍</p>
+              <p>按 [空白鍵] 或 點擊畫面 發射球</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Overlay Screen: Game Over -->
+      <div class="screen-overlay" id="game-over-screen">
+        <h2 class="screen-title text-glow-red">GAME OVER</h2>
+        <p class="final-score-text">最終得分：<span id="game-over-score">0</span></p>
+        <button class="btn btn-danger" id="restart-btn">重新開始</button>
+      </div>
+
+      <!-- Overlay Screen: Level Completed -->
+      <div class="screen-overlay" id="level-win-screen">
+        <h2 class="screen-title text-glow-green">LEVEL CLEAR!</h2>
+        <p class="win-bonus-text">解鎖下一關卡...</p>
+        <button class="btn btn-success" id="next-level-btn">進入下一關</button>
+      </div>
+
+      <!-- Overlay Screen: Victory Game Complete -->
+      <div class="screen-overlay" id="victory-screen">
+        <h2 class="screen-title text-glow-cyan">VICTORY</h2>
+        <p class="victory-sub">你已征服所有關卡！成為霓虹之王！</p>
+        <p class="final-score-text">最終得分：<span id="victory-score">0</span></p>
+        <button class="btn btn-primary" id="victory-restart-btn">重返戰場</button>
+      </div>
+    </div>
+
+    <!-- Active Power-up Progress HUD -->
+    <div id="powerup-status-container">
+      <!-- Dynamically filled with active powerup timers -->
+    </div>
+
+    <!-- Footer Controls Info -->
+    <footer id="game-footer">
+      <div class="footer-tip">按 [ESC] 暫停遊戲</div>
+      <div class="footer-credit">CyberBreak v1.0 • Procedural Sound Synth</div>
+    </footer>
+  </div>
+
+  <!-- Main Game Javascript -->
+  <script src="game.js"></script>
+</body>
+</html>

@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Aprender! 巴西葡萄牙語學習樂園</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🦜</text></svg>">
+</head>
+<body>
+
+  <!-- Header Section with stats -->
+  <header>
+    <div class="user-stats">
+      <div class="stat-item xp" title="經驗值 (XP)">
+        <span>⭐</span>
+        <span id="header-xp">0</span> XP
+      </div>
+      <div class="stat-item diamonds" title="藍色寶石">
+        <span>💎</span>
+        <span id="header-diamonds">5</span>
+      </div>
+      <div class="stat-item streak" title="每日練習連續天數">
+        <span>🔥</span>
+        <span id="header-streak">1</span> 天
+      </div>
+    </div>
+    
+    <div class="xp-progress-container">
+      <div class="xp-bar-bg">
+        <div class="xp-bar-fill" id="header-xp-bar"></div>
+      </div>
+      <span class="xp-bar-text" id="header-level-name">等級 1</span>
+    </div>
+
+    <button class="btn-reset" id="btn-reset-progress" title="重設學習進度">
+      🔄
+    </button>
+  </header>
+
+  <!-- Main Game Panel -->
+  <main>
+    
+    <!-- Screen 1: Dashboard Map -->
+    <section class="screen active" id="screen-map">
+      <h1 class="map-title">學習地圖</h1>
+      
+      <!-- Mascot Greeting -->
+      <div class="mascot-container">
+        <!-- SVG Mascot: Tuca the Toucan -->
+        <svg class="mascot-svg" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+          <!-- Feet -->
+          <circle cx="38" cy="84" r="5" fill="#ff9600" />
+          <circle cx="50" cy="84" r="5" fill="#ff9600" />
+          <!-- Body -->
+          <circle cx="45" cy="55" r="28" fill="#2d3436" />
+          <circle cx="42" cy="52" r="20" fill="#ffffff" />
+          <!-- Eye -->
+          <circle cx="36" cy="40" r="7" fill="#00a2f3" />
+          <circle cx="36" cy="40" r="3.5" fill="#2d3436" />
+          <circle cx="34" cy="38" r="1.5" fill="#ffffff" />
+          <!-- Wing -->
+          <ellipse cx="28" cy="62" rx="14" ry="9" fill="#1e272e" transform="rotate(-15 28 62)" />
+          <!-- Big Orange/Yellow Beak -->
+          <path d="M 45 30 C 65 28, 85 36, 88 48 C 88 54, 65 56, 45 50 Z" fill="#ff9600" />
+          <path d="M 45 30 C 55 30, 80 40, 88 48 C 76 47, 58 48, 45 50 Z" fill="#ffc800" />
+          <!-- Beak Tip (Dark) -->
+          <path d="M 78 44 C 82 45, 88 46, 88 48 C 88 50, 82 50, 78 48 Z" fill="#ff4b4b" />
+          <circle cx="82" cy="47" r="4.5" fill="#2d3436" />
+        </svg>
+        <div class="mascot-bubble" id="mascot-speech">
+          Olá! 我是大嘴鳥 Tuca。今天想學習哪一個關卡呢？點擊圓圈開始吧！
+        </div>
+      </div>
+
+      <!-- Level Map Path Nodes -->
+      <div class="level-path" id="level-nodes-container">
+        <!-- Dynamically filled by JavaScript -->
+      </div>
+    </section>
+
+    <!-- Screen 2: Flashcard Study Room -->
+    <section class="screen" id="screen-study">
+      <div class="study-header">
+        <button class="btn-cartoon gray" id="study-btn-back">⬅️ 返回</button>
+        <div class="study-title" id="study-unit-title">學習單字</div>
+        <div class="study-progress" id="study-progress-text">1 / 10</div>
+      </div>
+
+      <!-- Flipped Card Container -->
+      <div class="card-container">
+        <div class="flashcard" id="study-flashcard">
+          <!-- Front Side -->
+          <div class="card-face front">
+            <div class="card-emoji" id="study-card-emoji">👋</div>
+            <div class="card-word" id="study-card-portuguese">Olá</div>
+            <div class="card-audio-hint">🔊 點擊發音</div>
+          </div>
+          <!-- Back Side -->
+          <div class="card-face back">
+            <div class="card-translation" id="study-card-translation">你好</div>
+            <div class="card-hint-text" id="study-card-hint">常用打招呼用語。</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Controls -->
+      <div class="study-nav-controls">
+        <button class="btn-cartoon gray" id="study-btn-prev" style="flex: 1;">上一個</button>
+        <button class="btn-cartoon primary" id="study-btn-flip" style="flex: 1.5;">翻轉卡片 🔄</button>
+        <button class="btn-cartoon secondary" id="study-btn-next" style="flex: 1;">下一個</button>
+      </div>
+    </section>
+
+    <!-- Screen 3: Challenge Quiz -->
+    <section class="screen" id="screen-quiz">
+      <div class="quiz-header">
+        <div class="quiz-progress-row">
+          <button class="quiz-close-btn" id="quiz-btn-close">✖</button>
+          <div class="quiz-progress-bar-bg">
+            <div class="quiz-progress-bar-fill" id="quiz-progress-bar"></div>
+          </div>
+          <div class="hearts-container" id="quiz-hearts">
+            ❤️ ❤️ ❤️
+          </div>
+        </div>
+        <div class="quiz-question-type" id="quiz-question-type-label">聽力選擇題</div>
+        <div class="quiz-prompt" id="quiz-prompt-text">聽發音，選出正確的單字：</div>
+      </div>
+
+      <!-- Quiz Content Area -->
+      <div class="quiz-body" id="quiz-body-container">
+        <!-- Multiple Choice Grid (Dynamic) -->
+        <div class="options-grid" id="quiz-options-container">
+          <!-- E.g. Cards filled by JS -->
+        </div>
+        
+        <!-- Word Puzzle Tray (Dynamic) -->
+        <div id="quiz-puzzle-container" style="display: none;">
+          <div class="sentence-tray" id="quiz-sentence-tray">
+            <!-- Words arranged by player -->
+          </div>
+          <div class="word-reservoir" id="quiz-word-reservoir">
+            <!-- Word reservoir chips -->
+          </div>
+        </div>
+
+        <!-- Listening Speaker Center (Dynamic) -->
+        <div class="listening-prompt-container" id="quiz-listening-container" style="display: none;">
+          <button class="btn-speaker-big" id="quiz-speaker-btn">
+            🔊
+            <div class="listening-pulse-ring"></div>
+          </button>
+        </div>
+      </div>
+
+      <!-- Bottom Checker / Evaluation Panel -->
+      <div class="quiz-checker-panel" id="quiz-checker-panel">
+        <div class="checker-content">
+          <!-- Message block when answered -->
+          <div class="feedback-message" id="checker-feedback">
+            <div class="feedback-icon" id="checker-feedback-icon">✔</div>
+            <div class="feedback-text-wrapper">
+              <span class="feedback-title" id="checker-feedback-title">答對了！</span>
+              <span class="feedback-detail" id="checker-feedback-detail">非常好，繼續保持！</span>
+            </div>
+          </div>
+          <!-- Action Button -->
+          <button class="btn-cartoon primary" id="quiz-btn-action" style="min-width: 140px;">檢查</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Screen 4: Victory / Level Completed -->
+    <section class="screen" id="screen-victory">
+      <div class="victory-card">
+        <h2 class="victory-title">太棒了！🎉</h2>
+        <p class="victory-subtitle" id="victory-subtitle-text">你順利完成了這個挑戰！</p>
+        
+        <!-- Dancing Toucan -->
+        <svg class="victory-mascot" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+          <!-- Feet -->
+          <circle cx="38" cy="84" r="5" fill="#ff9600" />
+          <circle cx="50" cy="84" r="5" fill="#ff9600" />
+          <!-- Body -->
+          <circle cx="45" cy="55" r="28" fill="#2d3436" />
+          <circle cx="42" cy="52" r="20" fill="#ffffff" />
+          <!-- Eye -->
+          <circle cx="36" cy="40" r="7" fill="#00a2f3" />
+          <circle cx="36" cy="40" r="3.5" fill="#2d3436" />
+          <circle cx="34" cy="38" r="1.5" fill="#ffffff" />
+          <!-- Celebrating Wing -->
+          <ellipse cx="24" cy="48" rx="14" ry="9" fill="#1e272e" transform="rotate(35 24 48)" />
+          <!-- Big Orange/Yellow Beak -->
+          <path d="M 45 30 C 65 28, 85 36, 88 48 C 88 54, 65 56, 45 50 Z" fill="#ff9600" />
+          <path d="M 45 30 C 55 30, 80 40, 88 48 C 76 47, 58 48, 45 50 Z" fill="#ffc800" />
+          <!-- Beak Tip -->
+          <path d="M 78 44 C 82 45, 88 46, 88 48 C 88 50, 82 50, 78 48 Z" fill="#ff4b4b" />
+          <circle cx="82" cy="47" r="4.5" fill="#2d3436" />
+        </svg>
+
+        <!-- Rewards -->
+        <div class="rewards-showcase">
+          <div class="reward-bubble xp">
+            <span style="font-size: 1.5rem;">⭐</span>
+            <span class="reward-val xp" id="victory-xp-gain">+10</span>
+            <span class="reward-label">經驗值</span>
+          </div>
+          <div class="reward-bubble diamonds">
+            <span style="font-size: 1.5rem;">💎</span>
+            <span class="reward-val diamonds" id="victory-diamonds-gain">+3</span>
+            <span class="reward-label">藍色寶石</span>
+          </div>
+        </div>
+
+        <div class="victory-actions">
+          <button class="btn-cartoon primary" id="victory-btn-continue">返回地圖</button>
+          <button class="btn-cartoon secondary" id="victory-btn-replay">再練習一次</button>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Level Selected Popover (Unit Drawer) -->
+  <div class="overlay" id="popover-overlay"></div>
+  <div class="level-popover" id="level-popover">
+    <div class="popover-header">
+      <div class="popover-title-row">
+        <span class="popover-icon" id="popover-level-icon">🎒</span>
+        <div>
+          <h3 class="popover-title" id="popover-level-title">關卡標題</h3>
+          <span style="font-size: 0.85rem; color: var(--color-purple); font-weight: bold;" id="popover-level-subtitle">NÍVEL 1</span>
+        </div>
+      </div>
+      <button class="popover-close" id="popover-btn-close">✖</button>
+    </div>
+    <p class="popover-desc" id="popover-level-desc">關卡描述說明文字...</p>
+    
+    <div class="popover-actions">
+      <button class="btn-cartoon secondary" id="popover-btn-study">
+        📖 單字卡學習
+      </button>
+      <button class="btn-cartoon primary" id="popover-btn-quiz">
+        ⚡ 挑戰測驗
+      </button>
+      <button class="btn-cartoon gray full-width" id="popover-btn-advance">
+        👑 覺得學夠了？直接晉級
+      </button>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="vocab.js"></script>
+  <script src="audio.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

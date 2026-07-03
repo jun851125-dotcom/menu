@@ -1,0 +1,944 @@
+<!DOCTYPE html>
+<html lang="zh-Hant" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AURA CAFÉ - 極致奢華黑金咖啡沙龍</title>
+  <meta name="description" content="品味 AURA CAFÉ 的極致烘焙美學，探索從翠綠精品生豆到曜石黑金熟豆的蛻變歷程，享受奢華黑金沙龍的獨特氛圍。">
+  
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            aura: {
+              black: '#0b0a09',
+              gold: '#c5a880',
+              goldLight: '#dcc6a8',
+              goldDark: '#a3875f',
+              gray: '#1a1816',
+              grayLight: '#2c2a27',
+            }
+          },
+          fontFamily: {
+            serif: ['Cinzel', 'serif'],
+            sans: ['Montserrat', 'sans-serif'],
+          },
+          boxShadow: {
+            'gold-glow': '0 0 20px rgba(197, 168, 128, 0.15)',
+            'gold-glow-lg': '0 0 35px rgba(197, 168, 128, 0.3)',
+          }
+        }
+      }
+    }
+  </script>
+
+  <style type="text/css">
+    /* Custom premium styling */
+    body {
+      background-color: #0b0a09;
+      color: #c5a880;
+      font-family: 'Montserrat', sans-serif;
+    }
+    
+    .font-serif-luxury {
+      font-family: 'Cinzel', serif;
+    }
+
+    /* Ambient glow elements */
+    .glow-spot-1 {
+      background: radial-gradient(circle, rgba(197, 168, 128, 0.08) 0%, rgba(11, 10, 9, 0) 70%);
+    }
+
+    .glow-spot-2 {
+      background: radial-gradient(circle, rgba(197, 168, 128, 0.05) 0%, rgba(11, 10, 9, 0) 60%);
+    }
+
+    /* Hide scrollbar but keep functionality */
+    ::-webkit-scrollbar {
+      width: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #0b0a09;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #c5a880;
+      border-radius: 3px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #a3875f;
+    }
+
+    /* Custom Range Input (Slider) Styling for Premium Look */
+    input[type=range]::-webkit-slider-runnable-track {
+      background: #1a1816;
+      border: 1px solid rgba(197, 168, 128, 0.2);
+      border-radius: 4px;
+      height: 6px;
+    }
+    input[type=range]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      height: 18px;
+      width: 18px;
+      border-radius: 50%;
+      background: #c5a880;
+      border: 2px solid #0b0a09;
+      box-shadow: 0 0 10px rgba(197, 168, 128, 0.6);
+      cursor: pointer;
+      margin-top: -6.5px;
+      transition: transform 0.2s, background-color 0.2s;
+    }
+    input[type=range]::-webkit-slider-thumb:hover {
+      transform: scale(1.2);
+      background: #dcc6a8;
+    }
+    
+    input[type=range]::-moz-range-track {
+      background: #1a1816;
+      border: 1px solid rgba(197, 168, 128, 0.2);
+      border-radius: 4px;
+      height: 6px;
+    }
+    input[type=range]::-moz-range-thumb {
+      height: 16px;
+      width: 16px;
+      border-radius: 50%;
+      background: #c5a880;
+      border: 2px solid #0b0a09;
+      box-shadow: 0 0 10px rgba(197, 168, 128, 0.6);
+      cursor: pointer;
+      transition: transform 0.2s, background-color 0.2s;
+    }
+    input[type=range]::-moz-range-thumb:hover {
+      transform: scale(1.2);
+      background: #dcc6a8;
+    }
+
+    /* Dark calendar indicator for date pickers */
+    input[type="date"]::-webkit-calendar-picker-indicator {
+      filter: invert(70%) sepia(18%) saturate(928%) hue-rotate(352deg) brightness(89%) contrast(85%);
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body class="relative overflow-x-hidden min-h-screen flex flex-col justify-between">
+
+  <!-- Ambient Glow Effects -->
+  <div class="absolute top-[10%] left-[-10%] w-[50vw] h-[50vw] rounded-full glow-spot-1 pointer-events-none z-0"></div>
+  <div class="absolute bottom-[20%] right-[-10%] w-[60vw] h-[60vw] rounded-full glow-spot-2 pointer-events-none z-0"></div>
+
+  <!-- Header Navigation -->
+  <header class="sticky top-0 z-40 w-full bg-aura-black/85 backdrop-blur-md border-b border-aura-gold/15">
+    <div class="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
+      <a href="#" class="font-serif-luxury text-2xl font-bold tracking-[0.25em] text-aura-gold hover:text-aura-goldLight transition-colors duration-300">
+        AURA CAFÉ
+      </a>
+      <nav class="hidden md:flex space-x-10 text-xs tracking-[0.2em] font-medium text-aura-gold/80">
+        <a href="#about" class="hover:text-aura-gold transition-colors duration-300">BRAND STORY</a>
+        <a href="#roasting-slider" class="hover:text-aura-gold transition-colors duration-300">THE ART OF ROASTING</a>
+        <a href="#salon-gallery" class="hover:text-aura-gold transition-colors duration-300">SALON GALLERY</a>
+        <a href="#vip-services" class="hover:text-aura-gold transition-colors duration-300">VIP SERVICES</a>
+      </nav>
+      <div class="flex items-center">
+        <a href="#vip-services" class="border border-aura-gold/45 hover:border-aura-gold hover:bg-aura-gold hover:text-aura-black px-6 py-2 text-xs tracking-[0.2em] font-medium transition-all duration-500 rounded-sm">
+          RESERVE
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Hero Section -->
+  <section id="about" class="relative z-10 max-w-5xl mx-auto px-6 pt-16 pb-12 text-center">
+    <span class="text-xs tracking-[0.4em] text-aura-gold/60 uppercase block mb-3 font-semibold">The Ultimate Roasting Philosophy</span>
+    <h1 class="font-serif-luxury text-4xl md:text-6xl font-bold tracking-[0.1em] text-aura-gold mb-6 leading-tight">
+      極致黑金．覺醒之境
+    </h1>
+    <p class="max-w-2xl mx-auto text-sm md:text-base text-aura-gold/80 leading-relaxed font-light">
+      在 AURA CAFÉ，烘焙不只是溫度的控制，更是一場關於風味重塑的煉金術。<br>
+      從原產地精挑細選的翠綠生豆，歷經高溫淬鍊，化身為散發曜石光澤的黑金熟豆。<br>
+      在此動態滑移，親眼見證咖啡靈魂的華麗蛻變。
+    </p>
+  </section>
+
+  <!-- Before/After Slider Section -->
+  <section id="roasting-slider" class="relative z-10 max-w-5xl mx-auto px-6 py-8 w-full">
+    <div class="text-center mb-8">
+      <h2 class="font-serif-luxury text-2xl md:text-3xl tracking-[0.15em] text-aura-gold font-semibold">
+        烘焙對比滑桿
+      </h2>
+      <p class="text-xs text-aura-gold/60 mt-2 tracking-[0.1em]">拖曳中央金鈕，親炙生豆與熟豆的視覺衝擊</p>
+    </div>
+
+    <!-- Slider Container -->
+    <div id="comparison-slider" class="relative w-full h-[300px] md:h-[500px] rounded-lg overflow-hidden border border-aura-gold/20 shadow-gold-glow select-none cursor-ew-resize">
+      
+      <!-- Right Image: Dark Roast (Base Image) -->
+      <img src="assets/roasted_beans.jpg" alt="曜石黑金熟豆 (Dark Roast)" class="w-full h-full object-cover absolute inset-0 pointer-events-none">
+      <div class="absolute bottom-6 right-6 z-20 bg-aura-black/80 backdrop-blur-md px-4 py-2 border border-aura-gold/20 rounded">
+        <p class="text-xs tracking-[0.2em] font-serif-luxury text-aura-gold font-bold">曜石黑金熟豆 (DARK ROAST)</p>
+      </div>
+
+      <!-- Left Image: Green Beans (Overlay Image) -->
+      <div id="before-image-wrapper" class="absolute inset-y-0 left-0 w-1/2 overflow-hidden pointer-events-none">
+        <img src="assets/green_beans.jpg" alt="翠綠精品生豆 (Green Beans)" class="w-full h-full object-cover max-w-none absolute inset-0">
+      </div>
+      <div id="before-label" class="absolute bottom-6 left-6 z-20 bg-aura-black/80 backdrop-blur-md px-4 py-2 border border-aura-gold/20 rounded pointer-events-none">
+        <p class="text-xs tracking-[0.2em] font-serif-luxury text-aura-gold font-bold">翠綠精品生豆 (GREEN BEANS)</p>
+      </div>
+
+      <!-- Golden Split Line and Drag Handle -->
+      <div id="slider-handle" class="absolute top-0 bottom-0 left-1/2 w-0.5 bg-gradient-to-b from-aura-gold/20 via-aura-gold to-aura-gold/20 -translate-x-1/2 flex items-center justify-center z-30 pointer-events-none">
+        
+        <!-- Handle Button -->
+        <div class="w-12 h-12 rounded-full bg-aura-black border-2 border-aura-gold flex items-center justify-center shadow-gold-glow-lg cursor-ew-resize transform hover:scale-110 active:scale-95 transition-transform duration-300 pointer-events-auto">
+          <!-- Left/Right Icons -->
+          <svg class="w-6 h-6 text-aura-gold" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M8 9l-4 4 4 4m8 0l4-4-4-4"></path>
+          </svg>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- Cafe Salon Gallery Section -->
+  <section id="salon-gallery" class="relative z-10 max-w-5xl mx-auto px-6 py-16 w-full">
+    <div class="text-center mb-12">
+      <span class="text-xs tracking-[0.4em] text-aura-gold/60 uppercase block mb-3 font-semibold">Salon de Café</span>
+      <h2 class="font-serif-luxury text-2xl md:text-4xl tracking-[0.15em] text-aura-gold font-bold">
+        極致沙龍現場
+      </h2>
+      <div class="w-12 h-[1px] bg-aura-gold mx-auto mt-4"></div>
+    </div>
+
+    <!-- 2x2 Grid -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+      
+      <!-- Card 1 -->
+      <div class="group relative overflow-hidden rounded-md border border-aura-gold/15 bg-aura-gray cursor-zoom-in aspect-[4/3] shadow-lg transition-all duration-500 hover:border-aura-gold/40 hover:shadow-gold-glow"
+           data-src="assets/salon_1.jpg" data-caption="奢華黑金的室內美學，沈浸於溫暖微光與頂級皮椅的尊榮領域。">
+        <img src="assets/salon_1.jpg" alt="AURA CAFÉ Salon Interior" class="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105">
+        <div class="absolute inset-0 bg-gradient-to-t from-aura-black via-aura-black/30 to-transparent opacity-60 group-hover:opacity-80 transition-opacity duration-500"></div>
+        <div class="absolute bottom-0 left-0 p-6 translate-y-2 group-hover:translate-y-0 transition-transform duration-500">
+          <p class="text-xs tracking-[0.2em] font-serif-luxury text-aura-gold/70 mb-1">CHAPTER I</p>
+          <h3 class="font-serif-luxury text-lg text-aura-gold font-semibold tracking-wide">奢華黑金沙龍</h3>
+        </div>
+      </div>
+
+      <!-- Card 2 -->
+      <div class="group relative overflow-hidden rounded-md border border-aura-gold/15 bg-aura-gray cursor-zoom-in aspect-[4/3] shadow-lg transition-all duration-500 hover:border-aura-gold/40 hover:shadow-gold-glow"
+           data-src="assets/salon_2.jpg" data-caption="專業咖啡師運用純金器皿，手沖出層次細膩的靈魂之水。">
+        <img src="assets/salon_2.jpg" alt="Pour Over Craftsmanship" class="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105">
+        <div class="absolute inset-0 bg-gradient-to-t from-aura-black via-aura-black/30 to-transparent opacity-60 group-hover:opacity-80 transition-opacity duration-500"></div>
+        <div class="absolute bottom-0 left-0 p-6 translate-y-2 group-hover:translate-y-0 transition-transform duration-500">
+          <p class="text-xs tracking-[0.2em] font-serif-luxury text-aura-gold/70 mb-1">CHAPTER II</p>
+          <h3 class="font-serif-luxury text-lg text-aura-gold font-semibold tracking-wide">極致手沖工藝</h3>
+        </div>
+      </div>
+
+      <!-- Card 3 -->
+      <div class="group relative overflow-hidden rounded-md border border-aura-gold/15 bg-aura-gray cursor-zoom-in aspect-[4/3] shadow-lg transition-all duration-500 hover:border-aura-gold/40 hover:shadow-gold-glow"
+           data-src="assets/salon_3.jpg" data-caption="於大理石案前手捧暖杯，與自我的靈魂進行一場靜謐對話。">
+        <img src="assets/salon_3.jpg" alt="Savoring AURA Coffee" class="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105">
+        <div class="absolute inset-0 bg-gradient-to-t from-aura-black via-aura-black/30 to-transparent opacity-60 group-hover:opacity-80 transition-opacity duration-500"></div>
+        <div class="absolute bottom-0 left-0 p-6 translate-y-2 group-hover:translate-y-0 transition-transform duration-500">
+          <p class="text-xs tracking-[0.2em] font-serif-luxury text-aura-gold/70 mb-1">CHAPTER III</p>
+          <h3 class="font-serif-luxury text-lg text-aura-gold font-semibold tracking-wide">靜謐品飲時光</h3>
+        </div>
+      </div>
+
+      <!-- Card 4 -->
+      <div class="group relative overflow-hidden rounded-md border border-aura-gold/15 bg-aura-gray cursor-zoom-in aspect-[4/3] shadow-lg transition-all duration-500 hover:border-aura-gold/40 hover:shadow-gold-glow"
+           data-src="assets/salon_4.jpg" data-caption="黑瓷描金杯中盛裝著絲滑拉花，不僅是視覺，更是味蕾的藝術品。">
+        <img src="assets/salon_4.jpg" alt="Artisan Latte Art" class="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105">
+        <div class="absolute inset-0 bg-gradient-to-t from-aura-black via-aura-black/30 to-transparent opacity-60 group-hover:opacity-80 transition-opacity duration-500"></div>
+        <div class="absolute bottom-0 left-0 p-6 translate-y-2 group-hover:translate-y-0 transition-transform duration-500">
+          <p class="text-xs tracking-[0.2em] font-serif-luxury text-aura-gold/70 mb-1">CHAPTER IV</p>
+          <h3 class="font-serif-luxury text-lg text-aura-gold font-semibold tracking-wide">黑瓷描金拉花</h3>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- VIP Exclusive Services Section -->
+  <section id="vip-services" class="relative z-10 max-w-5xl mx-auto px-6 py-16 w-full border-t border-aura-gold/10">
+    <div class="text-center mb-12">
+      <span class="text-xs tracking-[0.4em] text-aura-gold/60 uppercase block mb-3 font-semibold">VIP Salon & Group Buying</span>
+      <h2 class="font-serif-luxury text-2xl md:text-4xl tracking-[0.15em] text-aura-gold font-bold">
+        尊榮會員服務
+      </h2>
+      <div class="w-12 h-[1px] bg-aura-gold mx-auto mt-4"></div>
+    </div>
+
+    <!-- Layout Grid -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
+      
+      <!-- Calculator Container -->
+      <div class="bg-aura-gray border border-aura-gold/15 p-8 rounded-md shadow-lg shadow-gold-glow flex flex-col justify-between min-h-[520px]">
+        <div>
+          <h3 class="font-serif-luxury text-xl text-aura-gold font-bold tracking-wider mb-4 flex items-center gap-2">
+            <span class="w-2 h-2 rounded-full bg-aura-gold animate-pulse"></span>
+            咖啡豆 ROI 團購計算器
+          </h3>
+          <p class="text-xs text-aura-gold/65 mb-8 tracking-wide font-light leading-relaxed">
+            與同好共享珍稀風味。隨數量增加享更多折扣，更可加購 AURA 專屬極致配品。
+          </p>
+
+          <!-- Slider -->
+          <div class="mb-8">
+            <div class="flex justify-between items-center mb-4">
+              <label for="quantity-slider" class="text-xs tracking-widest text-aura-goldLight">團購包數</label>
+              <span class="text-lg font-serif-luxury text-aura-gold font-bold"><span id="quantity-display" class="text-2xl">1</span> 包</span>
+            </div>
+            <input type="range" id="quantity-slider" min="1" max="15" value="1" 
+              class="w-full h-1 bg-aura-grayLight rounded-lg appearance-none cursor-pointer accent-aura-gold focus:outline-none mb-2">
+            <div class="flex justify-between text-[10px] text-aura-gold/45 tracking-widest">
+              <span>1包 (原價)</span>
+              <span>2-4包 (9折)</span>
+              <span>5包以上 (8折)</span>
+            </div>
+          </div>
+
+          <!-- Checkboxes -->
+          <div class="mb-8">
+            <span class="text-xs tracking-widest text-aura-goldLight block mb-4">尊榮配件加購</span>
+            <div class="space-y-3">
+              
+              <!-- Checkbox 1 -->
+              <label class="flex items-center p-3.5 bg-aura-black/40 border border-aura-gold/10 rounded-sm cursor-pointer hover:border-aura-gold/30 hover:bg-aura-black/60 transition-all duration-300 group select-none">
+                <input type="checkbox" id="addon-giftbox" class="hidden peer">
+                <div class="w-4 h-4 border border-aura-gold/40 rounded-sm flex items-center justify-center mr-3 peer-checked:bg-aura-gold peer-checked:border-aura-gold transition-colors duration-200">
+                  <svg class="w-2.5 h-2.5 text-aura-black opacity-0 peer-checked:opacity-100" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"></path>
+                  </svg>
+                </div>
+                <div class="flex-grow text-xs text-aura-goldLight group-hover:text-aura-gold transition-colors duration-300">
+                  原廠掛耳包禮盒
+                </div>
+                <div class="text-xs font-serif-luxury text-aura-gold font-bold">+$150</div>
+              </label>
+
+              <!-- Checkbox 2 -->
+              <label class="flex items-center p-3.5 bg-aura-black/40 border border-aura-gold/10 rounded-sm cursor-pointer hover:border-aura-gold/30 hover:bg-aura-black/60 transition-all duration-300 group select-none">
+                <input type="checkbox" id="addon-glass" class="hidden peer">
+                <div class="w-4 h-4 border border-aura-gold/40 rounded-sm flex items-center justify-center mr-3 peer-checked:bg-aura-gold peer-checked:border-aura-gold transition-colors duration-200">
+                  <svg class="w-2.5 h-2.5 text-aura-black opacity-0 peer-checked:opacity-100" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"></path>
+                  </svg>
+                </div>
+                <div class="flex-grow text-xs text-aura-goldLight group-hover:text-aura-gold transition-colors duration-300">
+                  雙層隔熱水晶杯
+                </div>
+                <div class="text-xs font-serif-luxury text-aura-gold font-bold">+$350</div>
+              </label>
+
+            </div>
+          </div>
+        </div>
+
+        <!-- Result Box (Golden font display) -->
+        <div class="border-t border-aura-gold/15 pt-6 grid grid-cols-2 gap-4">
+          <div class="bg-aura-black/40 border border-aura-gold/10 p-3 rounded-sm text-center">
+            <span class="text-[10px] tracking-widest text-aura-gold/50 block mb-1">當前單價</span>
+            <span id="display-unit-price" class="font-serif-luxury text-2xl font-bold text-aura-gold">$500</span>
+          </div>
+
+          <div class="bg-aura-black/40 border border-aura-gold/10 p-3 rounded-sm text-center">
+            <span class="text-[10px] tracking-widest text-aura-gold/50 block mb-1">折扣成數</span>
+            <span id="display-discount-rate" class="font-serif-luxury text-2xl font-bold text-aura-gold">無折扣</span>
+          </div>
+
+          <div class="bg-aura-black/40 border border-aura-gold/10 p-3 rounded-sm text-center">
+            <span class="text-[10px] tracking-widest text-aura-gold/50 block mb-1">加購總額</span>
+            <span id="display-addons-total" class="font-serif-luxury text-2xl font-bold text-aura-gold">$0</span>
+          </div>
+
+          <div class="bg-gradient-to-r from-aura-gold/5 to-aura-gold/20 border border-aura-gold/30 p-3 rounded-sm text-center col-span-2 shadow-gold-glow">
+            <span class="text-[10px] tracking-widest text-aura-goldLight block mb-1 font-semibold">最終結帳金額</span>
+            <span id="display-final-total" class="font-serif-luxury text-3xl md:text-4xl font-extrabold text-aura-gold tracking-wide">$500</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Booking Form Container -->
+      <div class="bg-aura-gray border border-aura-gold/15 p-8 rounded-md shadow-lg shadow-gold-glow relative min-h-[520px]">
+        <h3 class="font-serif-luxury text-xl text-aura-gold font-bold tracking-wider mb-4 flex items-center gap-2">
+          <span class="w-2 h-2 rounded-full bg-aura-gold animate-pulse"></span>
+          VIP 奢華訂位預約表單
+        </h3>
+        <p class="text-xs text-aura-gold/65 mb-8 tracking-wide font-light leading-relaxed">
+          預留奢華黑金沙龍席位，享受客製化的感官盛宴。填寫下方表單以完成您的尊榮預約。
+        </p>
+
+        <!-- Form -->
+        <form id="vip-booking-form" class="space-y-4">
+          <div>
+            <label for="booking-name" class="block text-[10px] tracking-widest text-aura-goldLight mb-1.5 uppercase font-medium">姓名</label>
+            <input type="text" id="booking-name" required placeholder="尊客姓名"
+              class="w-full bg-aura-black/60 border border-aura-gold/15 focus:border-aura-gold/50 rounded-sm px-4 py-2.5 text-xs text-aura-goldLight placeholder-aura-gold/20 outline-none transition-colors duration-300">
+          </div>
+
+          <div>
+            <label for="booking-phone" class="block text-[10px] tracking-widest text-aura-goldLight mb-1.5 uppercase font-medium">聯絡電話</label>
+            <input type="tel" id="booking-phone" required placeholder="如：0912-345678"
+              class="w-full bg-aura-black/60 border border-aura-gold/15 focus:border-aura-gold/50 rounded-sm px-4 py-2.5 text-xs text-aura-goldLight placeholder-aura-gold/20 outline-none transition-colors duration-300">
+          </div>
+
+          <div class="grid grid-cols-2 gap-4">
+            <div>
+              <label for="booking-date" class="block text-[10px] tracking-widest text-aura-goldLight mb-1.5 uppercase font-medium">預約日期</label>
+              <input type="date" id="booking-date" required
+                class="w-full bg-aura-black/60 border border-aura-gold/15 focus:border-aura-gold/50 rounded-sm px-3 py-2 text-xs text-aura-goldLight outline-none transition-colors duration-300">
+            </div>
+
+            <div>
+              <label for="booking-time" class="block text-[10px] tracking-widest text-aura-goldLight mb-1.5 uppercase font-medium">預約時段</label>
+              <div class="relative">
+                <select id="booking-time" required
+                  class="w-full appearance-none bg-aura-black/60 border border-aura-gold/15 focus:border-aura-gold/50 rounded-sm px-3 py-2.5 text-xs text-aura-goldLight outline-none transition-colors duration-300">
+                  <option value="" disabled selected>請選擇時段</option>
+                  <option value="11:00 - 13:00">11:00 - 13:00 (尊榮午茶時光)</option>
+                  <option value="14:00 - 16:00">14:00 - 16:00 (黑金爵士沙龍)</option>
+                  <option value="17:00 - 19:00">17:00 - 19:00 (黃昏微醺品味)</option>
+                  <option value="20:00 - 22:00">20:00 - 22:00 (曜石暗夜私享)</option>
+                </select>
+                <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3 text-aura-gold/60">
+                  <svg class="fill-current h-3.5 w-3.5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+                    <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/>
+                  </svg>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div>
+            <label for="booking-remarks" class="block text-[10px] tracking-widest text-aura-goldLight mb-1.5 uppercase font-medium">備註</label>
+            <textarea id="booking-remarks" rows="2" placeholder="若有特殊過敏原或特別紀念需求請備註"
+              class="w-full bg-aura-black/60 border border-aura-gold/15 focus:border-aura-gold/50 rounded-sm px-4 py-2 text-xs text-aura-goldLight placeholder-aura-gold/20 outline-none transition-colors duration-300 resize-none"></textarea>
+          </div>
+
+          <div class="pt-2">
+            <button type="submit" id="booking-submit-btn" 
+              class="w-full bg-transparent hover:bg-aura-gold text-aura-gold hover:text-aura-black font-semibold tracking-[0.25em] border border-aura-gold/50 hover:border-aura-gold py-3.5 px-6 rounded-sm text-xs transition-all duration-500 flex items-center justify-center gap-2">
+              
+              <!-- Loader Icon (Hidden by default) -->
+              <svg id="btn-spinner" class="animate-spin -ml-1 mr-3 h-4 w-4 text-current hidden" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+              </svg>
+              
+              <span id="btn-text">確認送出 VIP 預約</span>
+            </button>
+          </div>
+        </form>
+
+        <!-- Inline success container (displays below the form) -->
+        <div id="inline-success-container" class="mt-4 hidden opacity-0 transition-all duration-500 ease-in-out">
+          <div class="bg-aura-black/60 backdrop-blur-md border border-aura-gold/30 rounded-sm p-4 text-center">
+            <p class="text-xs text-aura-gold font-medium mb-1">預約成功！您的預約代碼為 <span id="inline-res-code" class="font-serif-luxury font-bold tracking-widest text-sm text-aura-goldLight">#Afus-XXXX</span></p>
+            <p class="text-[10px] text-aura-gold/50">已為您保留專屬席次，我們期待您的光臨。</p>
+          </div>
+        </div>
+
+        <!-- Elegant Spinning Loading Animation Overlay -->
+        <div id="booking-loading-overlay" class="absolute inset-0 bg-aura-black/85 backdrop-blur-sm rounded-md flex flex-col items-center justify-center z-20 transition-all duration-500 opacity-0 pointer-events-none">
+          <div class="relative w-14 h-14 mb-3">
+            <div class="absolute inset-0 rounded-full border border-aura-gold/10"></div>
+            <div class="absolute inset-0 rounded-full border-t border-aura-gold animate-spin"></div>
+            <div class="absolute inset-1.5 rounded-full border-b border-aura-goldLight animate-spin" style="animation-direction: reverse; animation-duration: 1.2s;"></div>
+          </div>
+          <p class="font-serif-luxury text-xs tracking-[0.25em] text-aura-gold animate-pulse">安排尊榮席次中...</p>
+        </div>
+
+      </div>
+
+    </div>
+  </section>
+
+  <!-- VIP Booking Success Modal (Glassmorphism overlay) -->
+  <div id="booking-success-modal" class="fixed inset-0 bg-[#0b0a09]/90 backdrop-blur-md z-50 flex items-center justify-center opacity-0 pointer-events-none transition-all duration-500 ease-in-out">
+    <div class="relative bg-aura-gray/95 border border-aura-gold/30 rounded-md p-8 md:p-10 max-w-md w-[90vw] shadow-gold-glow-lg text-center transform scale-95 transition-transform duration-500 ease-out">
+      
+      <!-- Close Button -->
+      <button id="success-modal-close" class="absolute top-4 right-4 text-aura-gold/70 hover:text-aura-gold transition-colors duration-300 p-1.5 z-10" aria-label="關閉">
+        <svg class="w-5 h-5 transform hover:rotate-90 transition-transform duration-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M6 18L18 6M6 6l12 12"></path>
+        </svg>
+      </button>
+
+      <!-- Checkmark -->
+      <div class="w-16 h-16 rounded-full border border-aura-gold/30 flex items-center justify-center mx-auto mb-5 bg-aura-black/40">
+        <svg class="w-8 h-8 text-aura-gold" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"></path>
+        </svg>
+      </div>
+
+      <!-- Title -->
+      <h3 class="font-serif-luxury text-xl md:text-2xl text-aura-gold font-bold tracking-wider mb-1">預約成功</h3>
+      <p class="text-[9px] text-aura-gold/60 tracking-widest uppercase mb-6">VIP Reservation Confirmed</p>
+      
+      <!-- Glassmorphic Details -->
+      <div class="bg-aura-black/50 border border-aura-gold/15 rounded-sm p-4 mb-6 text-left space-y-2.5">
+        <div class="flex justify-between text-xs border-b border-aura-gold/10 pb-2">
+          <span class="text-aura-gold/60">預約代碼</span>
+          <span id="modal-res-code" class="text-aura-gold font-serif-luxury font-bold tracking-widest text-sm">#Afus-XXXX</span>
+        </div>
+        <div class="flex justify-between text-[11px]">
+          <span class="text-aura-gold/60">尊貴賓客</span>
+          <span id="modal-res-name" class="text-aura-goldLight">尊客</span>
+        </div>
+        <div class="flex justify-between text-[11px]">
+          <span class="text-aura-gold/60">聯絡電話</span>
+          <span id="modal-res-phone" class="text-aura-goldLight">-</span>
+        </div>
+        <div class="flex justify-between text-[11px]">
+          <span class="text-aura-gold/60">預約日期</span>
+          <span id="modal-res-date" class="text-aura-goldLight">-</span>
+        </div>
+        <div class="flex justify-between text-[11px]">
+          <span class="text-aura-gold/60">預約時段</span>
+          <span id="modal-res-time" class="text-aura-goldLight">-</span>
+        </div>
+      </div>
+
+      <!-- Button -->
+      <button id="success-modal-confirm" class="w-full bg-aura-gold hover:bg-aura-goldLight text-aura-black font-bold tracking-[0.2em] py-3 px-6 rounded-sm text-xs transition-colors duration-300">
+        尊榮確認
+      </button>
+
+    </div>
+  </div>
+
+  <!-- Full Screen Lightbox Modal -->
+  <div id="lightbox" class="fixed inset-0 bg-[#0b0a09]/95 backdrop-blur-md z-50 flex flex-col items-center justify-center pointer-events-none opacity-0 transition-all duration-500 ease-in-out">
+    
+    <!-- Close Button -->
+    <button id="lightbox-close" class="absolute top-6 right-6 text-aura-gold/70 hover:text-aura-gold transition-colors duration-300 p-2 z-50" aria-label="關閉燈箱">
+      <svg class="w-8 h-8 transform hover:rotate-90 transition-transform duration-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M6 18L18 6M6 6l12 12"></path>
+      </svg>
+    </button>
+
+    <!-- Image Container with animation -->
+    <div class="relative max-w-[90vw] max-h-[75vh] md:max-h-[80vh] flex flex-col items-center justify-center">
+      <img id="lightbox-img" src="" alt="" class="max-w-full max-h-[70vh] object-contain border border-aura-gold/30 rounded-sm shadow-gold-glow-lg transform scale-95 transition-transform duration-500 ease-out">
+      
+      <!-- Caption -->
+      <div class="mt-6 text-center max-w-xl px-4">
+        <p id="lightbox-caption" class="text-sm md:text-base text-aura-goldLight/95 font-light tracking-wide leading-relaxed"></p>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Footer Section -->
+  <footer class="relative z-10 w-full bg-aura-gray border-t border-aura-gold/10 py-8 text-center text-xs tracking-widest text-aura-gold/45">
+    <p>© 2026 AURA CAFÉ. ALL RIGHTS RESERVED. DESIGNED FOR EXTRAORDINARY TASTE.</p>
+  </footer>
+
+  <!-- Native JavaScript -->
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      
+      // ==========================================
+      // Before/After Roasting Slider Logic
+      // ==========================================
+      const slider = document.getElementById('comparison-slider');
+      const beforeWrapper = document.getElementById('before-image-wrapper');
+      const handle = document.getElementById('slider-handle');
+      
+      let isDragging = false;
+
+      // Adjust image elements inside before-wrapper to match slider width
+      function adjustImageSize() {
+        const sliderWidth = slider.offsetWidth;
+        const innerImg = beforeWrapper.querySelector('img');
+        if (innerImg) {
+          innerImg.style.width = `${sliderWidth}px`;
+        }
+      }
+
+      // Handle resize events
+      window.addEventListener('resize', adjustImageSize);
+      adjustImageSize(); // Initial call
+
+      // Drag calculation
+      function moveSlider(clientX) {
+        const rect = slider.getBoundingClientRect();
+        let posX = clientX - rect.left;
+        let percentage = (posX / rect.width) * 100;
+        
+        // Boundaries constraint (0% to 100%)
+        if (percentage < 0) percentage = 0;
+        if (percentage > 100) percentage = 100;
+        
+        // Update handle position & image clip width
+        handle.style.left = `${percentage}%`;
+        beforeWrapper.style.width = `${percentage}%`;
+      }
+
+      // Mouse/Touch Down
+      function dragStart(e) {
+        isDragging = true;
+        // Move slider instantly on click/tap
+        const clientX = e.clientX || (e.touches && e.touches[0].clientX);
+        if (clientX !== undefined) {
+          moveSlider(clientX);
+        }
+      }
+
+      // Mouse/Touch Move
+      function dragMove(e) {
+        if (!isDragging) return;
+        
+        // Prevent scroll on mobile touch dragging
+        if (e.type === 'touchmove') {
+          e.preventDefault();
+        }
+
+        const clientX = e.clientX || (e.touches && e.touches[0].clientX);
+        if (clientX !== undefined) {
+          // Wrap in requestAnimationFrame for buttery smooth 60fps scrolling/dragging
+          window.requestAnimationFrame(() => {
+            moveSlider(clientX);
+          });
+        }
+      }
+
+      // Mouse/Touch Up
+      function dragEnd() {
+        isDragging = false;
+      }
+
+      // Attach event listeners to slider container and handle
+      slider.addEventListener('mousedown', dragStart);
+      slider.addEventListener('touchstart', dragStart, { passive: false });
+
+      window.addEventListener('mousemove', dragMove);
+      window.addEventListener('touchmove', dragMove, { passive: false });
+
+      window.addEventListener('mouseup', dragEnd);
+      window.addEventListener('touchend', dragEnd);
+      window.addEventListener('mouseleave', dragEnd);
+
+
+      // ==========================================
+      // Lightbox Gallery Logic
+      // ==========================================
+      const galleryItems = document.querySelectorAll('#salon-gallery [data-src]');
+      const lightbox = document.getElementById('lightbox');
+      const lightboxImg = document.getElementById('lightbox-img');
+      const lightboxCaption = document.getElementById('lightbox-caption');
+      const lightboxClose = document.getElementById('lightbox-close');
+
+      function openLightbox(src, caption) {
+        lightboxImg.src = src;
+        lightboxCaption.textContent = caption;
+        
+        // Open with smooth transition
+        lightbox.classList.remove('pointer-events-none', 'opacity-0');
+        lightbox.classList.add('opacity-100');
+        
+        setTimeout(() => {
+          lightboxImg.classList.remove('scale-95');
+          lightboxImg.classList.add('scale-100');
+        }, 50);
+
+        // Prevent body scroll when lightbox is open
+        document.body.style.overflow = 'hidden';
+      }
+
+      function closeLightbox() {
+        lightboxImg.classList.remove('scale-100');
+        lightboxImg.classList.add('scale-95');
+        
+        lightbox.classList.remove('opacity-100');
+        lightbox.classList.add('opacity-0', 'pointer-events-none');
+        
+        document.body.style.overflow = '';
+      }
+
+      // Attach click events to grid cards
+      galleryItems.forEach(item => {
+        item.addEventListener('click', () => {
+          const src = item.getAttribute('data-src');
+          const caption = item.getAttribute('data-caption');
+          openLightbox(src, caption);
+        });
+      });
+
+      // Close lightbox on clicking close button or black backdrop
+      lightboxClose.addEventListener('click', closeLightbox);
+      lightbox.addEventListener('click', (e) => {
+        // Close if click is outside the image container
+        if (e.target === lightbox || e.target.id === 'lightbox') {
+          closeLightbox();
+        }
+      });
+
+      // Keyboard support: Escape key
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && !lightbox.classList.contains('pointer-events-none')) {
+          closeLightbox();
+        }
+      });
+
+      // ==========================================
+      // Coffee Bean Group Buy Calculator Logic
+      // ==========================================
+      const qtySlider = document.getElementById('quantity-slider');
+      const qtyDisplay = document.getElementById('quantity-display');
+      const chkGiftbox = document.getElementById('addon-giftbox');
+      const chkGlass = document.getElementById('addon-glass');
+      
+      const dispUnitPrice = document.getElementById('display-unit-price');
+      const dispDiscountRate = document.getElementById('display-discount-rate');
+      const dispAddonsTotal = document.getElementById('display-addons-total');
+      const dispFinalTotal = document.getElementById('display-final-total');
+      
+      let finalTotalAnimFrame = null;
+
+      function updateCalculator() {
+        const qty = parseInt(qtySlider.value);
+        qtyDisplay.textContent = qty;
+        
+        let baseUnitPrice = 500;
+        let discountRateText = '原價';
+        let discountRate = 1.0;
+        
+        if (qty >= 2 && qty <= 4) {
+          discountRateText = '9折';
+          discountRate = 0.9;
+        } else if (qty >= 5) {
+          discountRateText = '8折';
+          discountRate = 0.8;
+        }
+        
+        const unitPrice = baseUnitPrice * discountRate;
+        const subtotal = unitPrice * qty;
+        
+        let addonsTotal = 0;
+        if (chkGiftbox.checked) {
+          addonsTotal += 150;
+        }
+        if (chkGlass.checked) {
+          addonsTotal += 350;
+        }
+        
+        const finalTotal = subtotal + addonsTotal;
+        
+        dispUnitPrice.textContent = `$${unitPrice}`;
+        dispDiscountRate.textContent = discountRateText;
+        dispAddonsTotal.textContent = `$${addonsTotal}`;
+        
+        animateNumber(dispFinalTotal, finalTotal);
+      }
+      
+      function animateNumber(element, targetValue) {
+        const currentText = element.textContent.replace('$', '').replace(/,/g, '');
+        const startValue = parseInt(currentText) || 0;
+        const duration = 300; // ms
+        const startTime = performance.now();
+        
+        if (finalTotalAnimFrame) {
+          cancelAnimationFrame(finalTotalAnimFrame);
+        }
+        
+        function update(currentTime) {
+          const elapsed = currentTime - startTime;
+          const progress = Math.min(elapsed / duration, 1);
+          // easeOutQuad
+          const easeProgress = progress * (2 - progress);
+          const currentValue = Math.round(startValue + (targetValue - startValue) * easeProgress);
+          
+          element.textContent = `$${currentValue.toLocaleString()}`;
+          
+          if (progress < 1) {
+            finalTotalAnimFrame = requestAnimationFrame(update);
+          } else {
+            element.textContent = `$${targetValue.toLocaleString()}`;
+          }
+        }
+        
+        finalTotalAnimFrame = requestAnimationFrame(update);
+      }
+
+      if (qtySlider) {
+        qtySlider.addEventListener('input', updateCalculator);
+        chkGiftbox.addEventListener('change', updateCalculator);
+        chkGlass.addEventListener('change', updateCalculator);
+        updateCalculator();
+      }
+
+      // ==========================================
+      // VIP Booking Form Logic
+      // ==========================================
+      const bookingForm = document.getElementById('vip-booking-form');
+      const bookingDateInput = document.getElementById('booking-date');
+      const loadingOverlay = document.getElementById('booking-loading-overlay');
+      const inlineSuccess = document.getElementById('inline-success-container');
+      const inlineResCode = document.getElementById('inline-res-code');
+      
+      const successModal = document.getElementById('booking-success-modal');
+      const modalResCode = document.getElementById('modal-res-code');
+      const modalResName = document.getElementById('modal-res-name');
+      const modalResPhone = document.getElementById('modal-res-phone');
+      const modalResDate = document.getElementById('modal-res-date');
+      const modalResTime = document.getElementById('modal-res-time');
+      
+      const modalClose = document.getElementById('success-modal-close');
+      const modalConfirm = document.getElementById('success-modal-confirm');
+      
+      // Set min date of reservation to today and enable easy click-to-pick
+      if (bookingDateInput) {
+        const today = new Date().toISOString().split('T')[0];
+        bookingDateInput.min = today;
+
+        // Trigger native calendar popup when clicking anywhere in the input field
+        bookingDateInput.addEventListener('click', () => {
+          try {
+            bookingDateInput.showPicker();
+          } catch (e) {
+            console.log("showPicker not supported", e);
+          }
+        });
+        bookingDateInput.addEventListener('focus', () => {
+          try {
+            bookingDateInput.showPicker();
+          } catch (e) {
+            console.log("showPicker not supported", e);
+          }
+        });
+      }
+
+      // Generate random VIP code #Afus-XXXX (numbers only)
+      function generateVipCode() {
+        let code = '';
+        for (let i = 0; i < 4; i++) {
+          code += Math.floor(Math.random() * 10).toString();
+        }
+        return `#Afus-${code}`;
+      }
+
+      function showModal(details) {
+        modalResCode.textContent = details.code;
+        modalResName.textContent = details.name;
+        modalResPhone.textContent = details.phone;
+        modalResDate.textContent = details.date;
+        modalResTime.textContent = details.time;
+        
+        successModal.classList.remove('pointer-events-none', 'opacity-0');
+        successModal.classList.add('opacity-100');
+        
+        const innerModal = successModal.querySelector('.relative');
+        if (innerModal) {
+          innerModal.classList.remove('scale-95');
+          innerModal.classList.add('scale-100');
+        }
+        
+        document.body.style.overflow = 'hidden';
+      }
+
+      function closeModal() {
+        successModal.classList.remove('opacity-100');
+        successModal.classList.add('opacity-0', 'pointer-events-none');
+        
+        const innerModal = successModal.querySelector('.relative');
+        if (innerModal) {
+          innerModal.classList.remove('scale-100');
+          innerModal.classList.add('scale-95');
+        }
+        
+        document.body.style.overflow = '';
+      }
+
+      if (bookingForm) {
+        bookingForm.addEventListener('submit', (e) => {
+          e.preventDefault();
+          
+          const name = document.getElementById('booking-name').value;
+          const phone = document.getElementById('booking-phone').value;
+          const date = document.getElementById('booking-date').value;
+          const time = document.getElementById('booking-time').value;
+          const remarks = document.getElementById('booking-remarks').value;
+          
+          const submitBtn = document.getElementById('booking-submit-btn');
+          const btnSpinner = document.getElementById('btn-spinner');
+          const btnText = document.getElementById('btn-text');
+          
+          // Disable button and show button spinner
+          submitBtn.disabled = true;
+          btnSpinner.classList.remove('hidden');
+          btnText.textContent = '處理中...';
+          
+          // Show full-card elegant loading overlay with golden spinner
+          loadingOverlay.classList.remove('pointer-events-none', 'opacity-0');
+          loadingOverlay.classList.add('opacity-100');
+          
+          // Simulate network booking request
+          setTimeout(() => {
+            const resCode = generateVipCode();
+            
+            // Hide loading overlays
+            loadingOverlay.classList.remove('opacity-100');
+            loadingOverlay.classList.add('opacity-0', 'pointer-events-none');
+            
+            submitBtn.disabled = false;
+            btnSpinner.classList.add('hidden');
+            btnText.textContent = '確認送出 VIP 預約';
+            
+            // Update inline notice
+            inlineResCode.textContent = resCode;
+            inlineSuccess.classList.remove('hidden');
+            setTimeout(() => {
+              inlineSuccess.classList.remove('opacity-0');
+              inlineSuccess.classList.add('opacity-100');
+            }, 50);
+            
+            // Show custom premium modal dialog
+            showModal({
+              code: resCode,
+              name: name,
+              phone: phone,
+              date: date,
+              time: time
+            });
+            
+            // Reset form
+            bookingForm.reset();
+            
+            // Reset min date constraints
+            const today = new Date().toISOString().split('T')[0];
+            bookingDateInput.min = today;
+            
+          }, 2000); // 2 seconds elegant loading
+        });
+      }
+
+      if (modalClose) modalClose.addEventListener('click', closeModal);
+      if (modalConfirm) modalConfirm.addEventListener('click', closeModal);
+      if (successModal) {
+        successModal.addEventListener('click', (e) => {
+          if (e.target === successModal) {
+            closeModal();
+          }
+        });
+      }
+
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && successModal && !successModal.classList.contains('pointer-events-none')) {
+          closeModal();
+        }
+      });
+    });
+  </script>
+</body>
+</html>

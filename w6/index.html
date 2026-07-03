@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>小畫家</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="app">
+    <div class="toolbar">
+      <div class="tool-group">
+        <button id="btn-new" title="新建">📄</button>
+        <button id="btn-open" title="打開">📂</button>
+        <button id="btn-save" title="儲存">💾</button>
+      </div>
+      <div class="tool-group">
+        <button id="btn-undo" title="復原">↩️</button>
+        <button id="btn-redo" title="重做">↪️</button>
+      </div>
+      <div class="tool-group tools">
+        <button class="tool active" data-tool="pencil" title="鉛筆">✏️</button>
+        <button class="tool" data-tool="brush" title="筆刷">🖌️</button>
+        <button class="tool" data-tool="eraser" title="橡皮擦">🧽</button>
+        <button class="tool" data-tool="fill" title="填滿">🪣</button>
+        <button class="tool" data-tool="text" title="文字">A</button>
+        <button class="tool" data-tool="line" title="直線">╱</button>
+        <button class="tool" data-tool="rect" title="矩形">▭</button>
+        <button class="tool" data-tool="ellipse" title="橢圓">⬭</button>
+        <button class="tool" data-tool="roundrect" title="圓角矩形">▢</button>
+        <button class="tool" data-tool="select" title="選取">⬚</button>
+      </div>
+      <div class="tool-group">
+        <label>大小</label>
+        <input type="range" id="brush-size" min="1" max="50" value="5">
+        <span id="size-display">5</span>
+      </div>
+      <div class="tool-group">
+        <label>外框</label>
+        <select id="stroke-style">
+          <option value="solid">實線</option>
+          <option value="dashed">虛線</option>
+          <option value="dotted">點線</option>
+        </select>
+      </div>
+      <div class="tool-group">
+        <label>填滿</label>
+        <select id="fill-style">
+          <option value="none">無</option>
+          <option value="fill">填滿</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="main">
+      <div class="color-palette">
+        <div class="current-colors">
+          <div class="color-box primary" id="primary-color" title="主要顏色"></div>
+          <div class="color-box secondary" id="secondary-color" title="次要顏色"></div>
+        </div>
+        <div class="colors" id="colors">
+        </div>
+      </div>
+      <div class="canvas-wrapper">
+        <canvas id="canvas"></canvas>
+      </div>
+    </div>
+
+    <div class="statusbar">
+      <span id="status-coord">X: 0, Y: 0</span>
+      <span id="status-size">813 × 600 像素</span>
+      <span id="status-zoom">100%</span>
+    </div>
+  </div>
+
+  <input type="file" id="file-input" accept="image/*" style="display:none">
+  <textarea id="text-input" class="hidden" placeholder="輸入文字..."></textarea>
+
+  <script src="app.js"></script>
+</body>
+</html>

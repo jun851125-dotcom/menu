@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NEON TYPE SHOOTER - 英文單字打字射擊遊戲</title>
+  <!-- SEO Meta Tags -->
+  <meta name="description" content="一個刺激好玩的賽博龐克風格英文單字打字射擊遊戲！在單字落地前將其打出擊落，鍛鍊打字速度與英文拼音能力。">
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+  <!-- Stylesheet -->
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div id="game-container">
+    <!-- Scrolling background grids are stylized in CSS -->
+    <div class="grid-background"></div>
+    <div class="stars"></div>
+
+    <!-- HUD Overlay -->
+    <div id="hud" class="hud-container hidden">
+      <div class="hud-item">
+        <span class="hud-label">SCORE</span>
+        <span id="score-val" class="hud-value neon-text-blue">0</span>
+      </div>
+      <div class="hud-item">
+        <span class="hud-label">WPM</span>
+        <span id="wpm-val" class="hud-value neon-text-green">0</span>
+      </div>
+      <div class="hud-item">
+        <span class="hud-label">LEVEL</span>
+        <span id="level-val" class="hud-value neon-text-purple">1</span>
+      </div>
+      <div class="hud-item misses-hud">
+        <span class="hud-label">MISSED</span>
+        <div id="misses-indicator" class="misses-indicator">
+          <!-- 10 Neon dots represent missed words -->
+          <div class="dot active"></div>
+          <div class="dot active"></div>
+          <div class="dot active"></div>
+          <div class="dot active"></div>
+          <div class="dot active"></div>
+          <div class="dot active"></div>
+          <div class="dot active"></div>
+          <div class="dot active"></div>
+          <div class="dot active"></div>
+          <div class="dot active"></div>
+        </div>
+      </div>
+      <div class="hud-item">
+        <span class="hud-label">SOUND</span>
+        <button id="hud-mute-btn" class="hud-mute-btn" title="切換靜音">🔊</button>
+      </div>
+    </div>
+
+    <!-- Game Canvas -->
+    <canvas id="game-canvas"></canvas>
+
+    <!-- UI Overlay Screens -->
+    <!-- Start / Main Menu Screen -->
+    <div id="start-screen" class="screen-overlay">
+      <div class="glass-card">
+        <h1 class="game-title">NEON TYPE<br><span class="neon-text-pink">SHOOTER</span></h1>
+        <p class="game-subtitle">打字英單射擊戰機</p>
+        
+        <div class="instructions">
+          <h3>【 遊戲規則 】</h3>
+          <ul>
+            <li>輸入畫面中落下的英文單字。</li>
+            <li>拼字正確時，戰機會鎖定單字並射擊！</li>
+            <li>若單字掉落至底部，會扣除 <span class="highlight-red">1 分</span>，並點亮一個 <span class="highlight-red">警示燈</span>。</li>
+            <li>累積漏掉 <span class="highlight-red">10 個詞</span> 則遊戲結束 (Game Over)。</li>
+            <li>由 2-3 個字母的短字開始，隨分數增加難度會持續提升！</li>
+          </ul>
+        </div>
+
+        <div class="settings">
+          <button id="sound-btn" class="ctrl-btn pulse">
+            <span class="icon">🔊</span> 音效：開啟
+          </button>
+        </div>
+
+        <button id="play-btn" class="action-btn glow-btn-cyan">LAUNCH MISSION</button>
+      </div>
+    </div>
+
+    <!-- Game Over Screen -->
+    <div id="game-over-screen" class="screen-overlay hidden">
+      <div class="glass-card gameover-card">
+        <h2 class="gameover-title neon-text-red">MISSION FAILED</h2>
+        <p class="gameover-subtitle">防線已遭破壞</p>
+
+        <div class="stats-panel">
+          <div class="stat-row">
+            <span>最終分數 (Score)</span>
+            <span id="final-score" class="stat-val neon-text-blue">0</span>
+          </div>
+          <div class="stat-row">
+            <span>打字速度 (Avg WPM)</span>
+            <span id="final-wpm" class="stat-val neon-text-green">0</span>
+          </div>
+          <div class="stat-row">
+            <span>擊落單字 (Destroyed)</span>
+            <span id="final-destroyed" class="stat-val neon-text-pink">0</span>
+          </div>
+          <div class="stat-row">
+            <span>最高波段 (Max Level)</span>
+            <span id="final-level" class="stat-val neon-text-purple">1</span>
+          </div>
+        </div>
+
+        <button id="restart-btn" class="action-btn glow-btn-pink">RETRY MISSION</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- JavaScript Entrypoint -->
+  <script src="game.js"></script>
+</body>
+</html>

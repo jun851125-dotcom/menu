@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI 指揮官教室助手</title>
+  <!-- 引入 Google Fonts: Outfit (現代字體) 與 JetBrains Mono (計時器等寬字體) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!-- 背景裝飾粒子 -->
+  <div class="bg-glow bg-glow-1"></div>
+  <div class="bg-glow bg-glow-2"></div>
+
+  <!-- 全螢幕 Confetti Canvas -->
+  <canvas id="confetti-canvas"></canvas>
+
+  <div class="app-container">
+    <!-- 頂部標題列 -->
+    <header class="app-header">
+      <div class="header-logo">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="logo-icon">
+          <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
+        </svg>
+        <div class="logo-text">
+          <h1>AI 指揮官教室助手</h1>
+          <p>Classroom Commander Assistant</p>
+        </div>
+      </div>
+      <button class="theme-toggle" id="theme-toggle" aria-label="切換主題">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon-sun">
+          <circle cx="12" cy="12" r="5"></circle>
+          <line x1="12" y1="1" x2="12" y2="3"></line>
+          <line x1="12" y1="21" x2="12" y2="23"></line>
+          <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+          <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+          <line x1="1" y1="12" x2="3" y2="12"></line>
+          <line x1="21" y1="12" x2="23" y2="12"></line>
+          <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+          <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+        </svg>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon-moon" style="display: none;">
+          <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+        </svg>
+      </button>
+    </header>
+
+    <!-- 標籤頁切換鈕 -->
+    <nav class="tab-nav">
+      <button class="tab-btn active" data-tab="tab-draw">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="tab-icon">
+          <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+          <circle cx="9" cy="7" r="4"></circle>
+          <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+          <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+        </svg>
+        <span>點名抽籤器</span>
+      </button>
+      <button class="tab-btn" data-tab="tab-timer">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="tab-icon">
+          <circle cx="12" cy="12" r="10"></circle>
+          <polyline points="12 6 12 12 16 14"></polyline>
+        </svg>
+        <span>實作倒數鐘</span>
+      </button>
+      <div class="tab-indicator"></div>
+    </nav>
+
+    <!-- 主內容區 -->
+    <main class="tab-content">
+      <!-- 點名抽籤器 Tab -->
+      <section id="tab-draw" class="content-panel active">
+        <div class="grid-layout">
+          <!-- 左側：學生名單與座號設定區 -->
+          <div class="panel-card input-card">
+            <div class="card-header">
+              <h2 class="card-title">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                  <circle cx="9" cy="7" r="4"></circle>
+                </svg>
+                座號名單設定
+              </h2>
+              <span class="badge" id="student-count">0 人</span>
+            </div>
+            
+            <!-- 座號快速產生設定 -->
+            <div class="seat-range-config">
+              <div class="config-row">
+                <label for="max-seat-num">最後 1 號 (1號至 N 號)：</label>
+                <input type="number" id="max-seat-num" value="30" min="1" max="100" class="num-input">
+              </div>
+            </div>
+
+            <!-- 名單預覽/微調區 -->
+            <p class="card-desc" style="margin-top: 8px; margin-bottom: 8px;">可在此微調座號（可手動刪除缺號，以空格或逗號分隔）：</p>
+            <textarea id="student-names" placeholder="例如：1, 2, 3..." style="min-height: 120px;"></textarea>
+            
+            <!-- 排除中籤選項 -->
+            <div class="exclude-config">
+              <label class="toggle-label">
+                <input type="checkbox" id="exclude-winners" checked>
+                <span>排除已中籤號碼</span>
+              </label>
+            </div>
+
+            <!-- 已中籤清單顯示 -->
+            <div class="excluded-list-card">
+              <div class="excluded-header">
+                <span>已中籤座號：</span>
+                <span id="excluded-count">(0)</span>
+              </div>
+              <div class="excluded-chips" id="excluded-chips">無</div>
+            </div>
+
+            <div class="card-actions">
+              <button class="btn btn-secondary" id="btn-reset-list">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"></path>
+                  <path d="M21 3v5h-5"></path>
+                  <path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"></path>
+                  <path d="M3 21v-5h5"></path>
+                </svg>
+                還原 1-30
+              </button>
+              <button class="btn btn-danger" id="btn-clear-exclude">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <polyline points="3 6 5 6 21 6"></polyline>
+                  <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                </svg>
+                重設中籤紀錄
+              </button>
+            </div>
+          </div>
+
+          <!-- 右側：隨機抽籤展示區 -->
+          <div class="panel-card display-card">
+            <div class="draw-board">
+              <div class="draw-glow"></div>
+              <div class="draw-placeholder" id="draw-placeholder">準備抽籤</div>
+              <div class="draw-result" id="draw-result">？</div>
+            </div>
+            <div class="draw-actions">
+              <button class="btn btn-primary btn-lg" id="btn-start-draw">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <polygon points="5 3 19 12 5 21 5 3"></polygon>
+                </svg>
+                隨機抽籤
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 實作倒數鐘 Tab -->
+      <section id="tab-timer" class="content-panel">
+        <div class="timer-layout">
+          <!-- 倒數鐘顯示區 -->
+          <div class="panel-card timer-card">
+            <div class="timer-display-wrapper">
+              <!-- SVG 圓環進度條 -->
+              <svg class="progress-ring" width="280" height="280">
+                <circle class="progress-ring-bg" stroke="rgba(255, 255, 255, 0.05)" stroke-width="8" fill="transparent" r="120" cx="140" cy="140" />
+                <circle class="progress-ring-bar" stroke="url(#timer-grad)" stroke-width="12" fill="transparent" r="120" cx="140" cy="140" stroke-linecap="round" />
+                <defs>
+                  <linearGradient id="timer-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" stop-color="#3b82f6" />
+                    <stop offset="100%" stop-color="#a855f7" />
+                  </linearGradient>
+                </defs>
+              </svg>
+
+              <!-- 計時器數字 -->
+              <div class="timer-text-container">
+                <div class="timer-time" id="timer-time">03:00</div>
+                <div class="timer-status" id="timer-status">已就緒</div>
+              </div>
+            </div>
+
+            <!-- 快速設定按鈕 -->
+            <div class="preset-container">
+              <span class="preset-label">快速設定：</span>
+              <div class="preset-chips">
+                <button class="chip" data-time="180">3 分鐘</button>
+                <button class="chip" data-time="300">5 分鐘</button>
+                <button class="chip" data-time="600">10 分鐘</button>
+                <button class="chip" data-time="900">15 分鐘</button>
+              </div>
+            </div>
+
+            <!-- 計時控制鈕 -->
+            <div class="timer-controls">
+              <button class="btn btn-primary" id="btn-timer-start">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon-play">
+                  <polygon points="5 3 19 12 5 21 5 3"></polygon>
+                </svg>
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon-pause" style="display: none;">
+                  <rect x="6" y="4" width="4" height="16"></rect>
+                  <rect x="14" y="4" width="4" height="16"></rect>
+                </svg>
+                <span id="btn-timer-start-text">開始</span>
+              </button>
+              <button class="btn btn-secondary" id="btn-timer-reset">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"></path>
+                </svg>
+                重設
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>

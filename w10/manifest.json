@@ -1,0 +1,18 @@
+{
+  "name": "英語學習樂園",
+  "short_name": "英語樂園",
+  "description": "參考 Duolingo 遊戲化設計的英語單字與測驗學習程式",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#f9f9fb",
+  "theme_color": "#58cc02",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' fill='%2358cc02' rx='20'/%3E%3Ctext x='15' y='75' font-size='70'%3E🦉%3C/text%3E%3C/svg%3E",
+      "sizes": "192x192 512x512",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
